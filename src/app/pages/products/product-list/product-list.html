@@ -1,0 +1,41 @@
+<div class="product-list-container">
+  <div class="header-section">
+    <h1>{{ keyword ? 'Kết quả tìm kiếm cho: "' + keyword + '"' : 'Sản phẩm mới nhất' }}</h1>
+    <p>Khám phá bộ sưu tập phong cách và xu hướng mới.</p>
+  </div>
+
+  <div class="product-grid" *ngIf="products.length > 0; else noProducts">
+    <div class="product-card" *ngFor="let product of products; let i = index">
+      <div class="product-image" [routerLink]="['/products', product.id]">
+        <img [src]="product.imageUrl || getPlaceholderImage(product.id || i)" [alt]="product.name">
+        <div class="overlay">
+          <button class="btn view-btn">Xem chi tiết</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand" *ngIf="product.brand?.name">{{ product.brand.name }}</div>
+        <h3 class="product-name" [routerLink]="['/products', product.id]">{{ product.name }}</h3>
+        <p class="product-price">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noProducts>
+    <div class="empty-state">
+      <i class="fa-solid fa-box-open empty-icon"></i>
+      <h3>Không tìm thấy sản phẩm nào!</h3>
+      <p>Thử tìm kiếm với từ khoá khác nhé.</p>
+    </div>
+  </ng-template>
+
+  <!-- Phân trang -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button [disabled]="currentPage === 0" (click)="changePage(currentPage - 1)">
+      &laquo; Trước
+    </button>
+    <span class="page-info">Trang {{ currentPage + 1 }} / {{ totalPages }}</span>
+    <button [disabled]="currentPage === totalPages - 1" (click)="changePage(currentPage + 1)">
+      Sau &raquo;
+    </button>
+  </div>
+</div>

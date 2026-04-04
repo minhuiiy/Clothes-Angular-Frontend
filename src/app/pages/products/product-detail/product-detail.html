@@ -1,0 +1,58 @@
+<div class="product-detail-container" *ngIf="product">
+  <div class="breadcrumb">
+    <a routerLink="/">Trang chủ</a> &gt; 
+    <a routerLink="/products">Sản phẩm</a> &gt; 
+    <span>{{ product.name }}</span>
+  </div>
+
+  <div class="product-detail-grid">
+    <!-- Cột Hình Ảnh -->
+    <div class="product-image-gallery">
+      <div class="main-image">
+        <img [src]="product.imageUrl || getPlaceholderImage(product.id)" [alt]="product.name">
+      </div>
+    </div>
+
+    <!-- Cột Thông tin -->
+    <div class="product-info-panel">
+      <div class="brand-tag" *ngIf="product.brand?.name">{{ product.brand?.name }}</div>
+      <h1 class="product-title">{{ product.name }}</h1>
+      <div class="product-price">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</div>
+      
+      <div class="divider"></div>
+      
+      <div class="product-description">
+        <h3>Mô tả sản phẩm</h3>
+        <p>{{ product.description || 'Chưa có mô tả cho sản phẩm này.' }}</p>
+      </div>
+
+      <div class="product-meta">
+        <div class="meta-item" *ngIf="product.category?.name">
+          <span class="meta-label">Danh mục:</span>
+          <span class="meta-value">{{ product.category?.name }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Tình trạng:</span>
+          <span class="meta-value" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock <= 0">
+            {{ product.stock > 0 ? (product.stock + ' sản phẩm có sẵn') : 'Hết hàng' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="action-section" *ngIf="product.stock > 0">
+        <div class="quantity-selector">
+          <span class="qty-label">Số lượng:</span>
+          <div class="qty-controls">
+            <button class="qty-btn" (click)="decreaseQuantity()">-</button>
+            <input type="number" class="qty-input" [(ngModel)]="quantity" readonly>
+            <button class="qty-btn" (click)="increaseQuantity()">+</button>
+          </div>
+        </div>
+
+        <button class="btn-add-to-cart" (click)="addToCart()">
+          <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

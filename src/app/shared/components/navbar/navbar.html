@@ -3,7 +3,7 @@
     <div class="logo">
       <a routerLink="/">TrendyBox</a>
     </div>
-    
+
     <ul class="nav-links">
       <li><a routerLink="/products" routerLinkActive="active">Sản phẩm mới <span class="caret">▼</span></a></li>
       <li><a routerLink="/category/nam" routerLinkActive="active">Nam <span class="caret">▼</span></a></li>
@@ -13,33 +13,40 @@
     </ul>
 
     <div class="nav-icons">
-      <a href="#"><span title="Location">📍</span></a>
-      <div class="search-box" *ngIf="isSearchActive">
-        <input 
-          type="text" 
-          placeholder="Tìm kiếm..." 
-          [(ngModel)]="searchKeyword" 
-          (keyup)="doSearch($event)"
-          (blur)="isSearchActive = false"
-          autofocus
-        >
+      <a href="#"><span title="Location"><i class="fa-solid fa-location-dot"></i></span></a>
+      <div class="search-container">
+        <a href="javascript:void(0)" (click)="toggleSearch()"><span title="Search"><i
+              class="fa-solid fa-magnifying-glass"></i></span></a>
+
+        <div class="search-dropdown" *ngIf="isSearchActive">
+          <div class="search-arrow"></div>
+          <div class="search-title">TÌM KIẾM</div>
+          <div class="search-input-wrapper">
+            <input type="text" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKeyword" (keyup)="doSearch($event)"
+              autofocus>
+            <span class="search-submit-icon" (click)="doSearch({key: 'Enter'})"><i
+                class="fa-solid fa-magnifying-glass"></i></span>
+          </div>
+        </div>
       </div>
-      <a href="javascript:void(0)" (click)="toggleSearch()"><span title="Search">🔍</span></a>
-      
+
       <!-- Logic Profile -->
       <ng-container *ngIf="!currentUser; else loggedInTpl">
-        <a routerLink="/auth/login"><span title="Đăng nhập" style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Đăng nhập</span></a>
+        <a routerLink="/auth/login"><span title="Đăng nhập"
+            style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Đăng nhập</span></a>
       </ng-container>
-      
+
       <ng-template #loggedInTpl>
         <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
-          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName || currentUser.username }}</span>
-          <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất" style="font-size: 0.8rem; color: var(--text-secondary);">[Thoát]</a>
+          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName ||
+            currentUser.username }}</span>
+          <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất"
+            style="font-size: 0.8rem; color: var(--text-secondary);">[Thoát]</a>
         </div>
       </ng-template>
 
       <a routerLink="/cart" class="cart-icon">
-        <span title="Cart">🛒</span>
+        <span title="Cart"><i class="fa-solid fa-cart-shopping"></i></span>
         <span class="cart-badge">0</span>
       </a>
     </div>
