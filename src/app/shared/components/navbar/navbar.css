@@ -86,3 +86,16 @@
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+.search-box {
+  position: absolute;
+  right: 200px;
+  top: 15px;
+}
+.search-box input {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-size: 0.9rem;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,133 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  background-color: var(--bg-color);
+  padding: 2rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 550px;
+  background: #ffffff;
+  padding: 3rem 2rem;
+}
+
+.auth-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.auth-tabs h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ccc;
+  margin: 0;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.auth-tabs h2.active {
+  color: #000;
+}
+
+.auth-tabs .divider {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: #000;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 1.2rem;
+  font-size: 1rem;
+  background-color: #e5e5e5;
+  border: none;
+  font-family: inherit;
+  color: #333;
+}
+
+.auth-input::placeholder {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Fallback for standard browsers since pure white on grey might be hard, but we follow the UI */
+.auth-input::-webkit-input-placeholder { color: #f0f0f0; }
+.auth-input:focus {
+  outline: 2px solid #ccc;
+  background-color: #eeeeee;
+}
+
+.auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.btn-dark {
+  background-color: #000;
+  color: #fff;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 8px; /* Based on UI snippet */
+  border: none;
+  text-transform: uppercase;
+}
+
+.btn-dark:hover {
+  background-color: #333;
+}
+
+.btn-dark:disabled {
+  background-color: #888;
+  cursor: not-allowed;
+}
+
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.auth-links p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.auth-links .link {
+  color: #4b6b9e;
+  text-decoration: none;
+}
+
+.auth-links .link:hover {
+  text-decoration: underline;
+}
+
+.error-msg {
+  color: #d13030;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.success-msg {
+  color: #27863d;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  text-align: center;
+}

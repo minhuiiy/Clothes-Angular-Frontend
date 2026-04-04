@@ -14,9 +14,31 @@
 
     <div class="nav-icons">
       <a href="#"><span title="Location">📍</span></a>
-      <a href="#"><span title="Search">🔍</span></a>
-      <a href="#"><span title="Profile">👤</span></a>
-      <a href="/cart" class="cart-icon">
+      <div class="search-box" *ngIf="isSearchActive">
+        <input 
+          type="text" 
+          placeholder="Tìm kiếm..." 
+          [(ngModel)]="searchKeyword" 
+          (keyup)="doSearch($event)"
+          (blur)="isSearchActive = false"
+          autofocus
+        >
+      </div>
+      <a href="javascript:void(0)" (click)="toggleSearch()"><span title="Search">🔍</span></a>
+      
+      <!-- Logic Profile -->
+      <ng-container *ngIf="!currentUser; else loggedInTpl">
+        <a routerLink="/auth/login"><span title="Đăng nhập" style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Đăng nhập</span></a>
+      </ng-container>
+      
+      <ng-template #loggedInTpl>
+        <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
+          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName || currentUser.username }}</span>
+          <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất" style="font-size: 0.8rem; color: var(--text-secondary);">[Thoát]</a>
+        </div>
+      </ng-template>
+
+      <a routerLink="/cart" class="cart-icon">
         <span title="Cart">🛒</span>
         <span class="cart-badge">0</span>
       </a>

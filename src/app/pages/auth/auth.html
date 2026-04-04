@@ -1,0 +1,85 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    
+    <!-- Tab Navigation -->
+    <div class="auth-tabs">
+      <h2 
+        [class.active]="isLoginMode" 
+        (click)="switchMode(true)">
+        Đăng nhập
+      </h2>
+      <span class="divider">|</span>
+      <h2 
+        [class.active]="!isLoginMode" 
+        (click)="switchMode(false)">
+        Đăng ký
+      </h2>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
+      
+      <!-- Đăng ký yêu cầu thêm field -->
+      @if(!isLoginMode) {
+        <input 
+          type="email" 
+          placeholder="Vui lòng nhập email của bạn" 
+          name="email" 
+          [(ngModel)]="formData.email" 
+          required 
+          class="auth-input">
+
+        <input 
+          type="text" 
+          placeholder="Vui lòng nhập họ và tên của bạn" 
+          name="fullName" 
+          [(ngModel)]="formData.fullName" 
+          required 
+          class="auth-input">
+      }
+
+      <input 
+        type="text" 
+        placeholder="Vui lòng nhập tên đăng nhập của bạn" 
+        name="username" 
+        [(ngModel)]="formData.username" 
+        required 
+        class="auth-input">
+
+      <input 
+        type="password" 
+        placeholder="Vui lòng nhập mật khẩu của bạn" 
+        name="password" 
+        [(ngModel)]="formData.password" 
+        required 
+        class="auth-input">
+
+      <!-- Action Area -->
+      <div class="auth-actions">
+        <button type="submit" class="btn btn-dark" [disabled]="!authForm.valid">
+          {{ isLoginMode ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ' }}
+        </button>
+
+        <div class="auth-links">
+          <p *ngIf="isLoginMode">Bạn quên mật khẩu? <a href="#" class="link">Quên mật khẩu?</a></p>
+          <p *ngIf="isLoginMode">Bạn chưa có tài khoản? <a href="javascript:void(0)" (click)="switchMode(false)" class="link">Đăng ký</a></p>
+          <p *ngIf="!isLoginMode">Bạn đã có tài khoản? <a href="javascript:void(0)" (click)="switchMode(true)" class="link">Đăng nhập</a></p>
+        </div>
+      </div>
+      
+      <!-- Error Message -->
+      @if(errorMessage) {
+        <div class="error-msg">
+          {{ errorMessage }}
+        </div>
+      }
+      <!-- Success Message -->
+      @if(successMessage) {
+        <div class="success-msg">
+          {{ successMessage }}
+        </div>
+      }
+
+    </form>
+  </div>
+</div>
