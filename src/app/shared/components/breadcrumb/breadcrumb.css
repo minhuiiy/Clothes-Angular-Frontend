@@ -1,0 +1,49 @@
+.breadcrumb-nav {
+  background-color: #f7f7f7;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+  font-family: 'Inter', sans-serif;
+}
+
+.breadcrumb-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.breadcrumb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #333;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+  color: #000;
+}
+
+.active-item {
+  color: #db2127; /* Màu đỏ nhấn như trong hình */
+  font-weight: 500;
+}
+
+.separator {
+  margin: 0 10px;
+  color: #999;
+  font-size: 11px;
+}

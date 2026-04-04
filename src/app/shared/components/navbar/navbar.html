@@ -47,7 +47,7 @@
 
       <a routerLink="/cart" class="cart-icon">
         <span title="Cart"><i class="fa-solid fa-cart-shopping"></i></span>
-        <span class="cart-badge">0</span>
+        <span class="cart-badge" *ngIf="(cartCount$ | async) as count">{{ count }}</span>
       </a>
     </div>
   </div>

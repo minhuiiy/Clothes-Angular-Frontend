@@ -1,85 +1,63 @@
 <div class="auth-wrapper">
-  <div class="auth-card">
-    
-    <!-- Tab Navigation -->
-    <div class="auth-tabs">
-      <h2 
-        [class.active]="isLoginMode" 
-        (click)="switchMode(true)">
-        Đăng nhập
-      </h2>
-      <span class="divider">|</span>
-      <h2 
-        [class.active]="!isLoginMode" 
-        (click)="switchMode(false)">
-        Đăng ký
-      </h2>
-    </div>
-
-    <!-- Form -->
-    <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
+  <div class="auth-container">
+    <div class="auth-card shadow">
       
-      <!-- Đăng ký yêu cầu thêm field -->
-      @if(!isLoginMode) {
-        <input 
-          type="email" 
-          placeholder="Vui lòng nhập email của bạn" 
-          name="email" 
-          [(ngModel)]="formData.email" 
-          required 
-          class="auth-input">
+      <!-- Title with thick underline -->
+      <div class="auth-header">
+        <h1 class="auth-title">{{ isLoginMode ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ' }}</h1>
+        <div class="title-underline"></div>
+      </div>
 
-        <input 
-          type="text" 
-          placeholder="Vui lòng nhập họ và tên của bạn" 
-          name="fullName" 
-          [(ngModel)]="formData.fullName" 
-          required 
-          class="auth-input">
-      }
+      <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
+        <!-- Register only fields -->
+        <div class="form-group" *ngIf="!isLoginMode">
+          <input type="text" name="fullName" [(ngModel)]="formData.fullName" 
+            placeholder="Họ và tên" class="form-input" required>
+        </div>
 
-      <input 
-        type="text" 
-        placeholder="Vui lòng nhập tên đăng nhập của bạn" 
-        name="username" 
-        [(ngModel)]="formData.username" 
-        required 
-        class="auth-input">
+        <div class="form-group" *ngIf="!isLoginMode">
+          <input type="email" name="email" [(ngModel)]="formData.email" 
+            placeholder="Email" class="form-input" required>
+        </div>
 
-      <input 
-        type="password" 
-        placeholder="Vui lòng nhập mật khẩu của bạn" 
-        name="password" 
-        [(ngModel)]="formData.password" 
-        required 
-        class="auth-input">
+        <!-- Common fields -->
+        <div class="form-group">
+          <input type="text" name="username" [(ngModel)]="formData.username" 
+            placeholder="Tên tài khoản hoặc email" class="form-input" required>
+        </div>
 
-      <!-- Action Area -->
-      <div class="auth-actions">
-        <button type="submit" class="btn btn-dark" [disabled]="!authForm.valid">
+        <div class="form-group">
+          <input type="password" name="password" [(ngModel)]="formData.password" 
+            placeholder="Mật khẩu" class="form-input" required>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="!authForm.valid">
           {{ isLoginMode ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ' }}
         </button>
 
-        <div class="auth-links">
-          <p *ngIf="isLoginMode">Bạn quên mật khẩu? <a href="#" class="link">Quên mật khẩu?</a></p>
-          <p *ngIf="isLoginMode">Bạn chưa có tài khoản? <a href="javascript:void(0)" (click)="switchMode(false)" class="link">Đăng ký</a></p>
-          <p *ngIf="!isLoginMode">Bạn đã có tài khoản? <a href="javascript:void(0)" (click)="switchMode(true)" class="link">Đăng nhập</a></p>
+        <div class="form-footer">
+          <a href="javascript:void(0)" class="footer-link">Quên mật khẩu?</a>
+          <a href="javascript:void(0)" (click)="switchMode(!isLoginMode)" class="footer-link">
+            {{ isLoginMode ? 'Đăng ký tại đây' : 'Đã có tài khoản? Đăng nhập' }}
+          </a>
         </div>
-      </div>
-      
-      <!-- Error Message -->
-      @if(errorMessage) {
-        <div class="error-msg">
-          {{ errorMessage }}
-        </div>
-      }
-      <!-- Success Message -->
-      @if(successMessage) {
-        <div class="success-msg">
-          {{ successMessage }}
-        </div>
-      }
 
-    </form>
+        <div class="social-login-divider">
+          <span class="divider-text">hoặc đăng nhập qua</span>
+        </div>
+
+        <div class="social-buttons">
+          <button type="button" class="btn-social btn-facebook">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </button>
+          <button type="button" class="btn-social btn-google">
+            <i class="fab fa-google-plus-g"></i> Google
+          </button>
+        </div>
+
+        <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
+        <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
+      </form>
+    </div>
   </div>
 </div>

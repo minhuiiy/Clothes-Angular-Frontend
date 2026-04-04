@@ -3,6 +3,8 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
+import { CartService } from '../../../core/services/cart.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -15,8 +17,15 @@ export class Navbar implements OnInit {
   isSearchActive = false;
   searchKeyword = '';
   currentUser: any = null;
+  cartCount$: Observable<number>;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService, 
+    private router: Router,
+    private cartService: CartService
+  ) {
+    this.cartCount$ = this.cartService.getCartCount();
+  }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
