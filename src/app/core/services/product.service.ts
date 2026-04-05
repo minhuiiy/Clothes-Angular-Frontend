@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://localhost:8081/api/products';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +10,21 @@ const API_URL = 'http://localhost:8080/api';
 export class ProductService {
   constructor(private http: HttpClient) {}
 
-  getProducts(filters: any = {}): Observable<any> {
+  getProducts(options: { keyword?: string; page?: number; size?: number; categoryId?: number } = {}): Observable<any> {
+    const page = options.page ?? 0;
+    const size = options.size ?? 10;
     let params = new HttpParams()
       .set('page', (filters.page || 0).toString())
       .set('size', (filters.size || 10).toString())
       .set('sort', filters.sort || 'newest');
 
-    if (filters.keyword) params = params.set('keyword', filters.keyword);
-    if (filters.categoryId) params = params.set('categoryId', filters.categoryId.toString());
-    if (filters.brandId) params = params.set('brandId', filters.brandId.toString());
-    if (filters.minPrice) params = params.set('minPrice', filters.minPrice.toString());
-    if (filters.maxPrice) params = params.set('maxPrice', filters.maxPrice.toString());
-    if (filters.color) params = params.set('color', filters.color);
-    if (filters.isPromoted) params = params.set('isPromoted', 'true');
-    if (filters.isFeatured) params = params.set('isFeatured', 'true');
+    if (options.keyword) {
+      params = params.set('keyword', options.keyword);
+    }
+
+    if (options.categoryId != null) {
+      params = params.set('categoryId', options.categoryId.toString());
+    }
 
     return this.http.get(`${API_URL}/products`, { params });
   }

@@ -24,34 +24,7 @@ export class ProductList implements OnInit {
   totalPages = 0;
   totalItems = 0;
   keyword = '';
-  sort = 'newest';
-  
-  // Filter state
-  isFilterOpen = false;
-  filters: any = {
-    categoryId: null,
-    brandId: null,
-    minPrice: null,
-    maxPrice: null,
-    color: null,
-    isPromoted: false,
-    isFeatured: false
-  };
-
-  priceRanges = [
-    { label: 'Dưới 1.000.000đ', min: 0, max: 1000000 },
-    { label: '1.000.000đ - 3.000.000đ', min: 1000000, max: 3000000 },
-    { label: 'Trên 4.000.000đ', min: 4000000, max: null }
-  ];
-
-  colors = [
-    { name: 'Tím', value: 'purple', hex: '#a855f7' },
-    { name: 'Vàng', value: 'yellow', hex: '#eab308' },
-    { name: 'Đỏ', value: 'red', hex: '#ef4444' },
-    { name: 'Đen', value: 'black', hex: '#000000' },
-    { name: 'Xanh lá', value: 'green', hex: '#22c55e' },
-    { name: 'Nâu', value: 'brown', hex: '#78350f' }
-  ];
+  categoryId: number | null = null;
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {}
 
@@ -59,7 +32,7 @@ export class ProductList implements OnInit {
     this.loadFilterOptions();
     this.route.queryParams.subscribe(params => {
       this.keyword = params['keyword'] || '';
-      this.filters.categoryId = params['category'] ? +params['category'] : null;
+      this.categoryId = params['categoryId'] != null ? Number(params['categoryId']) : null;
       this.fetchProducts();
     });
   }
@@ -79,14 +52,7 @@ export class ProductList implements OnInit {
   }
 
   fetchProducts(page: number = 0): void {
-    const params = {
-      ...this.filters,
-      keyword: this.keyword,
-      page,
-      sort: this.sort
-    };
-
-    this.productService.getProducts(params).subscribe({
+    this.productService.getProducts({ keyword: this.keyword, page, categoryId: this.categoryId ?? undefined }).subscribe({
       next: (data) => {
         this.products = data.products;
         this.currentPage = data.currentPage;
