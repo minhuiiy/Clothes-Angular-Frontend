@@ -16,18 +16,20 @@ export class ProductList implements OnInit {
   totalPages = 0;
   totalItems = 0;
   keyword = '';
+  categoryId: number | null = null;
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.keyword = params['keyword'] || '';
+      this.categoryId = params['categoryId'] != null ? Number(params['categoryId']) : null;
       this.fetchProducts();
     });
   }
 
   fetchProducts(page: number = 0): void {
-    this.productService.getProducts(this.keyword, page).subscribe({
+    this.productService.getProducts({ keyword: this.keyword, page, categoryId: this.categoryId ?? undefined }).subscribe({
       next: (data) => {
         this.products = data.products;
         this.currentPage = data.currentPage;

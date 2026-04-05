@@ -6,9 +6,47 @@
 
     <ul class="nav-links">
       <li><a routerLink="/products" routerLinkActive="active">Sản phẩm mới <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nam" routerLinkActive="active">Nam <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nu" routerLinkActive="active">Nữ <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/phu-kien" routerLinkActive="active">Phụ kiện <span class="caret">▼</span></a></li>
+      <li class="nav-item-dropdown" (mouseenter)="toggleDropdown('nam')" (mouseleave)="closeDropdown()">
+        <a href="javascript:void(0)" [class.active]="openDropdown === 'nam'">Nam <span class="caret">▼</span></a>
+        <div class="dropdown" *ngIf="openDropdown === 'nam'">
+          <ng-container *ngIf="menu; else loadingMenu">
+            <div class="dropdown-section" *ngFor="let cat of menu.nam">
+              <div class="dropdown-title" (click)="onSelectCategory(cat)">{{ cat.name }}</div>
+              <a class="dropdown-link" *ngFor="let child of (cat.children || [])" href="javascript:void(0)" (click)="onSelectCategory(child)">
+                {{ child.name }}
+              </a>
+            </div>
+          </ng-container>
+        </div>
+      </li>
+
+      <li class="nav-item-dropdown" (mouseenter)="toggleDropdown('nu')" (mouseleave)="closeDropdown()">
+        <a href="javascript:void(0)" [class.active]="openDropdown === 'nu'">Nữ <span class="caret">▼</span></a>
+        <div class="dropdown" *ngIf="openDropdown === 'nu'">
+          <ng-container *ngIf="menu; else loadingMenu">
+            <div class="dropdown-section" *ngFor="let cat of menu.nu">
+              <div class="dropdown-title" (click)="onSelectCategory(cat)">{{ cat.name }}</div>
+              <a class="dropdown-link" *ngFor="let child of (cat.children || [])" href="javascript:void(0)" (click)="onSelectCategory(child)">
+                {{ child.name }}
+              </a>
+            </div>
+          </ng-container>
+        </div>
+      </li>
+
+      <li class="nav-item-dropdown" (mouseenter)="toggleDropdown('phuKien')" (mouseleave)="closeDropdown()">
+        <a href="javascript:void(0)" [class.active]="openDropdown === 'phuKien'">Phụ kiện <span class="caret">▼</span></a>
+        <div class="dropdown" *ngIf="openDropdown === 'phuKien'">
+          <ng-container *ngIf="menu; else loadingMenu">
+            <div class="dropdown-section" *ngFor="let cat of menu.phuKien">
+              <div class="dropdown-title" (click)="onSelectCategory(cat)">{{ cat.name }}</div>
+              <a class="dropdown-link" *ngFor="let child of (cat.children || [])" href="javascript:void(0)" (click)="onSelectCategory(child)">
+                {{ child.name }}
+              </a>
+            </div>
+          </ng-container>
+        </div>
+      </li>
       <li><a routerLink="/brands" routerLinkActive="active">Thương hiệu <span class="caret">▼</span></a></li>
     </ul>
 
@@ -52,3 +90,7 @@
     </div>
   </div>
 </nav>
+
+<ng-template #loadingMenu>
+  <div class="dropdown-loading">Đang tải...</div>
+</ng-template>
