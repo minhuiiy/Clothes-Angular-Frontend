@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
 import { CartService } from '../../../core/services/cart.service';
+import { ProductService } from '../../../core/services/product.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -18,11 +19,17 @@ export class Navbar implements OnInit {
   searchKeyword = '';
   currentUser: any = null;
   cartCount$: Observable<number>;
+  
+  // Categories for dropdowns
+  accessoryCategories: any[] = [];
+  menCategories: any[] = [];
+  womenCategories: any[] = [];
 
   constructor(
     public authService: AuthService, 
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private productService: ProductService
   ) {
     this.cartCount$ = this.cartService.getCartCount();
   }
@@ -30,6 +37,21 @@ export class Navbar implements OnInit {
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+    });
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.productService.getCategories().subscribe(cats => {
+      // Find Accessories parent
+      const accParent = cats.find(c => c.slug === 'phu-kien');
+      if (accParent) {
+        this.accessoryCategories = cats.filter(c => c.parent_id === accParent.id);
+      }
+      
+      // Basic grouping for others
+      this.menCategories = cats.filter(c => c.slug.includes('nam') && !c.parent_id);
+      this.womenCategories = cats.filter(c => c.slug.includes('nu') && !c.parent_id);
     });
   }
 

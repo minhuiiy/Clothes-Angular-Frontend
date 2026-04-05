@@ -1,7 +1,104 @@
 <div class="product-list-container">
+  <!-- Filter Drawer Backdrop -->
+  <div class="drawer-backdrop" *ngIf="isFilterOpen" (click)="toggleFilter()"></div>
+
+  <!-- Filter Drawer -->
+  <div class="filter-drawer" [class.open]="isFilterOpen">
+    <div class="drawer-header">
+      <h2>BỘ LỌC</h2>
+      <button class="close-btn" (click)="toggleFilter()">&times;</button>
+    </div>
+
+    <div class="drawer-content">
+      <!-- Category Filter -->
+      <div class="filter-group">
+        <h3>Danh mục sản phẩm</h3>
+        <ul class="filter-list">
+          <li (click)="filters.isPromoted = true; applyFilters()" [class.active]="filters.isPromoted">Sản phẩm khuyến mãi</li>
+          <li (click)="filters.isFeatured = true; applyFilters()" [class.active]="filters.isFeatured">Sản phẩm nổi bật</li>
+          <li *ngFor="let cat of mainCategories" (click)="filters.categoryId = cat.id; applyFilters()" [class.active]="filters.categoryId === cat.id">
+            {{ cat.name }}
+          </li>
+          <li (click)="resetFilters(); applyFilters()" [class.active]="!filters.categoryId && !filters.isPromoted && !filters.isFeatured">Tất cả sản phẩm</li>
+        </ul>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-group">
+        <h3>Nhà cung cấp</h3>
+        <ul class="filter-list checkbox-list">
+          <li *ngFor="let brand of brands">
+            <label class="checkbox-container">
+              {{ brand.name }}
+              <input type="radio" name="brand" [value]="brand.id" [(ngModel)]="filters.brandId" (change)="applyFilters()">
+              <span class="checkmark"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <h3>Lọc giá</h3>
+        <ul class="filter-list checkbox-list">
+          <li *ngFor="let range of priceRanges">
+            <label class="checkbox-container">
+              {{ range.label }}
+              <input type="radio" name="price" (change)="applyPriceRange(range)">
+              <span class="checkmark"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Color Filter -->
+      <div class="filter-group">
+        <h3>Màu sắc</h3>
+        <div class="color-palette">
+          <button *ngFor="let color of colors" 
+                  [title]="color.name" 
+                  [style.background-color]="color.hex"
+                  [class.active]="filters.color === color.value"
+                  (click)="selectColor(color.value)">
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="drawer-footer">
+      <button class="btn reset-btn" (click)="resetFilters()">Xoá lọc</button>
+      <button class="btn apply-btn" (click)="toggleFilter()">Hoàn tất</button>
+    </div>
+  </div>
+
   <div class="header-section">
     <h1>{{ keyword ? 'Kết quả tìm kiếm cho: "' + keyword + '"' : 'Sản phẩm mới nhất' }}</h1>
     <p>Khám phá bộ sưu tập phong cách và xu hướng mới.</p>
+  </div>
+
+  <div class="filter-sort-section">
+    <div class="result-count">
+      <span><b>{{ totalItems }}</b> sản phẩm</span>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="filter-btn" (click)="toggleFilter()">
+        <i class="fa-solid fa-sliders"></i> BỘ LỌC
+      </button>
+
+      <div class="sort-dropdown">
+        <select id="sort-select" [value]="sort" (change)="onSortChange($event)">
+          <option value="featured">Sản phẩm nổi bật</option>
+          <option value="price_asc">Giá: Tăng dần</option>
+          <option value="price_desc">Giá: Giảm dần</option>
+          <option value="name_asc">Tên: A - Z</option>
+          <option value="name_desc">Tên: Z - A</option>
+          <option value="oldest">Cũ nhất</option>
+          <option value="newest">Mới nhất</option>
+          <option value="best_selling">Bán chạy nhất</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <div class="product-grid" *ngIf="products.length > 0; else noProducts">

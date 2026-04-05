@@ -5,11 +5,27 @@
     </div>
 
     <ul class="nav-links">
-      <li><a routerLink="/products" routerLinkActive="active">Sản phẩm mới <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nam" routerLinkActive="active">Nam <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nu" routerLinkActive="active">Nữ <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/phu-kien" routerLinkActive="active">Phụ kiện <span class="caret">▼</span></a></li>
-      <li><a routerLink="/brands" routerLinkActive="active">Thương hiệu <span class="caret">▼</span></a></li>
+      <li class="has-dropdown">
+        <a routerLink="/products" routerLinkActive="active">Sản phẩm mới <span class="caret">▼</span></a>
+      </li>
+      <li class="has-dropdown">
+        <a routerLink="/category/nam" routerLinkActive="active">Nam <span class="caret">▼</span></a>
+      </li>
+      <li class="has-dropdown">
+        <a routerLink="/category/nu" routerLinkActive="active">Nữ <span class="caret">▼</span></a>
+      </li>
+      <li class="has-dropdown">
+        <a routerLink="/category/phu-kien" routerLinkActive="active">Phụ kiện <span class="caret">▼</span></a>
+        <!-- Dropdown Menu for Accessories -->
+        <ul class="dropdown-menu" *ngIf="accessoryCategories.length > 0">
+          <li *ngFor="let cat of accessoryCategories">
+            <a [routerLink]="['/products']" [queryParams]="{category: cat.id}">{{ cat.name }}</a>
+          </li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a routerLink="/brands" routerLinkActive="active">Thương hiệu <span class="caret">▼</span></a>
+      </li>
     </ul>
 
     <div class="nav-icons">
