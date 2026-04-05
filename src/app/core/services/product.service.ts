@@ -1,43 +1,91 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
-const API_URL = 'http://localhost:8081/api/products';
+export interface IProduct {
+  id?: number;
+  name: string;
+  description?: string;
+  price: number;
+  discountPrice?: number;
+  stock: number;
+  imageUrl?: string;
+  color?: string;
+  isFeatured?: boolean;
+  soldCount?: number;
+  category?: {
+    id: number;
+    name: string;
+  };
+  brand?: {
+    id: number;
+    name: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient) {}
+  private apiUrl = 'http://localhost:8080/api/products';
+  private adminUrl = 'http://localhost:8080/api/admin/products';
 
-  getProducts(options: { keyword?: string; page?: number; size?: number; categoryId?: number } = {}): Observable<any> {
-    const page = options.page ?? 0;
-    const size = options.size ?? 10;
+  private productsSubject = new BehaviorSubject<IProduct[]>([]);
+  public products$ = this.productsSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    this.getAllProductsAdmin(); // Load initial data for admin
+  }
+
+  // Public methods
+  getProducts(options: { keyword?: string; page?: number; size?: number; categoryId?: number; sort?: string } = {}): Observable<any> {
     let params = new HttpParams()
-      .set('page', (filters.page || 0).toString())
-      .set('size', (filters.size || 10).toString())
-      .set('sort', filters.sort || 'newest');
+      .set('page', (options.page || 0).toString())
+      .set('size', (options.size || 10).toString())
+      .set('sort', options.sort || 'newest');
 
-    if (options.keyword) {
-      params = params.set('keyword', options.keyword);
-    }
+    if (options.keyword) params = params.set('keyword', options.keyword);
+    if (options.categoryId) params = params.set('categoryId', options.categoryId.toString());
 
-    if (options.categoryId != null) {
-      params = params.set('categoryId', options.categoryId.toString());
-    }
-
-    return this.http.get(`${API_URL}/products`, { params });
+    return this.http.get<any>(this.apiUrl, { params });
   }
 
-  getProductById(id: number): Observable<any> {
-    return this.http.get(`${API_URL}/products/${id}`);
+  getProductById(id: number): Observable<IProduct> {
+    return this.http.get<IProduct>(`${this.apiUrl}/${id}`);
   }
 
+  // Admin methods
+  getAllProductsAdmin(): void {
+    this.getProducts({ size: 100 }).subscribe({
+      next: (data) => this.productsSubject.next(data.products || []),
+      error: (err) => console.error('Error fetching admin products:', err)
+    });
+  }
+
+  createProduct(formData: FormData): Observable<IProduct> {
+    return this.http.post<IProduct>(this.adminUrl, formData).pipe(
+      tap(() => this.getAllProductsAdmin())
+    );
+  }
+
+  updateProduct(id: number, formData: FormData): Observable<IProduct> {
+    return this.http.put<IProduct>(`${this.adminUrl}/${id}`, formData).pipe(
+      tap(() => this.getAllProductsAdmin())
+    );
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.adminUrl}/${id}`).pipe(
+      tap(() => this.getAllProductsAdmin())
+    );
+  }
+
+  // Helpers
   getCategories(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_URL}/categories`);
+    return this.http.get<any[]>('http://localhost:8080/api/categories');
   }
 
   getBrands(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_URL}/brands`);
+    return this.http.get<any[]>('http://localhost:8080/api/brands');
   }
 }

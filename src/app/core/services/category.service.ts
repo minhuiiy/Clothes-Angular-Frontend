@@ -1,30 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
-export type CategorySummary = {
-  id: number;
+export interface ICategory {
+  id?: number;
   name: string;
-  slug: string;
-  imageUrl?: string | null;
-  children?: CategorySummary[];
-};
+  slug?: string;
+  description?: string;
+  status?: boolean;
+  children?: ICategory[];
+  parent_id?: number | null;
+}
 
 export type CategoryMenuResponse = {
-  nam: CategorySummary[];
-  nu: CategorySummary[];
-  phuKien: CategorySummary[];
+  nam: ICategory[];
+  nu: ICategory[];
+  phuKien: ICategory[];
 };
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = 'http://localhost:8081/api/categories';
+  private apiUrl = 'http://localhost:8080/api/categories';
+  
+  private categoriesSubject = new BehaviorSubject<ICategory[]>([]);
+  public categories$ = this.categoriesSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.getAll(); // Initial fetch
+  }
+
+  getAll(): void {
+    this.http.get<ICategory[]>(this.apiUrl).subscribe({
+      next: (data: ICategory[]) => this.categoriesSubject.next(data),
+      error: (err: any) => console.error('Error fetching categories:', err)
+    });
+  }
 
   getMenu(): Observable<CategoryMenuResponse> {
     return this.http.get<CategoryMenuResponse>(`${this.apiUrl}/menu`);
+  }
+
+  create(category: ICategory): Observable<ICategory> {
+    return this.http.post<ICategory>(`${this.apiUrl}/admin`, category).pipe(
+      tap(() => this.getAll())
+    );
+  }
+
+  update(id: number, category: ICategory): Observable<ICategory> {
+    return this.http.put<ICategory>(`${this.apiUrl}/admin/${id}`, category).pipe(
+      tap(() => this.getAll())
+    );
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/admin/${id}`).pipe(
+      tap(() => this.getAll())
+    );
   }
 }
