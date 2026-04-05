@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
 import { CartService } from '../../../core/services/cart.service';
+import { ProductService } from '../../../core/services/product.service';
 import { Observable } from 'rxjs';
 import { CategoryService, CategoryMenuResponse, CategorySummary } from '../../../core/services/category.service';
 

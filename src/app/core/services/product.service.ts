@@ -14,8 +14,9 @@ export class ProductService {
     const page = options.page ?? 0;
     const size = options.size ?? 10;
     let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+      .set('page', (filters.page || 0).toString())
+      .set('size', (filters.size || 10).toString())
+      .set('sort', filters.sort || 'newest');
 
     if (options.keyword) {
       params = params.set('keyword', options.keyword);
@@ -25,10 +26,18 @@ export class ProductService {
       params = params.set('categoryId', options.categoryId.toString());
     }
 
-    return this.http.get(API_URL, { params });
+    return this.http.get(`${API_URL}/products`, { params });
   }
 
   getProductById(id: number): Observable<any> {
-    return this.http.get(`${API_URL}/${id}`);
+    return this.http.get(`${API_URL}/products/${id}`);
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL}/categories`);
+  }
+
+  getBrands(): Observable<any[]> {
+    return this.http.get<any[]>(`${API_URL}/brands`);
   }
 }
