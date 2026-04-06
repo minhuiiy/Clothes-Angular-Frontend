@@ -1,0 +1,75 @@
+<div class="category-admin-page p-8 bg-white min-h-screen">
+  <div class="page-header mb-8">
+    <h1 class="text-[26px] font-black text-black uppercase tracking-wide">QUẢN LÝ DANH MỤC</h1>
+    <button class="add-btn mt-4 px-4 py-2 bg-black text-white rounded" (click)="openModal()">+ Thêm danh mục</button>
+  </div>
+
+  <div class="controls-row flex flex-col md:flex-row gap-6 mb-6 items-center justify-start">
+    <div class="search-box relative w-full md:w-80">
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Tìm kiếm danh mục..." 
+        class="block w-full pl-4 pr-4 py-2.5 bg-[#f1f3f5] rounded-full text-sm outline-none placeholder-gray-500 font-medium text-gray-800"
+      >
+    </div>
+  </div>
+
+  <div class="table-wrapper overflow-hidden rounded-t-lg">
+    <table class="category-table w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-[#c2d4ff] text-black">
+          <th class="px-6 py-3.5 font-bold text-sm">Tên danh mục</th>
+          <th class="px-6 py-3.5 font-bold text-sm">Mô tả</th>
+          <th class="px-6 py-3.5 font-bold text-sm">Trạng thái</th>
+          <th class="px-6 py-3.5 font-bold text-sm">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cat of filteredCategories" class="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+          <td class="px-6 py-4 text-sm text-gray-800 font-medium">{{cat.name}}</td>
+          <td class="px-6 py-4 text-sm text-gray-800">{{cat.description}}</td>
+          <td class="px-6 py-4 text-sm">
+            <button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full cursor-pointer transition-all font-bold text-xs text-white"
+                    [ngClass]="cat.status ? 'bg-[#22c55e] hover:bg-[#1fa951]' : 'bg-[#c81e1e] hover:bg-[#a51919]'"
+                    (click)="toggleStatus(cat)">
+              {{cat.status ? 'Hoạt động' : 'Tạm ẩn'}}
+            </button>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <button class="w-7 h-7 rounded-[4px] bg-[#fbbf24] text-white flex items-center justify-center hover:bg-yellow-500 transition-colors" 
+                      (click)="openModal(cat)">Sửa</button>
+              <button class="w-7 h-7 rounded-[4px] bg-[#ef4444] text-white flex items-center justify-center hover:bg-red-600 transition-colors" 
+                      (click)="deleteCategory(cat.id)">Xóa</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="showModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
+    <div class="modal-content bg-white p-6 rounded" style="width: 400px; max-width: 90%;">
+      <h2 class="text-xl mb-4 font-bold">{{ isEdit ? 'Sửa danh mục' : 'Thêm mới danh mục' }}</h2>
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold">Tên danh mục</label>
+        <input type="text" [(ngModel)]="currentCategory.name" class="w-full border p-2 rounded">
+      </div>
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold">Mô tả</label>
+        <textarea [(ngModel)]="currentCategory.description" class="w-full border p-2 rounded" rows="3"></textarea>
+      </div>
+      <div class="mb-4 flex items-center gap-2">
+        <input type="checkbox" [(ngModel)]="currentCategory.status" id="catStatus">
+        <label for="catStatus" class="text-sm font-bold">Kích hoạt</label>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button class="px-4 py-2 border rounded" (click)="closeModal()">Hủy</button>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded" (click)="saveCategory()">Lưu</button>
+      </div>
+    </div>
+  </div>
+</div>
