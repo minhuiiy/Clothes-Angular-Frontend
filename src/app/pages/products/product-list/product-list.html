@@ -1,41 +1,237 @@
-<div class="product-list-container">
-  <div class="header-section">
-    <h1>{{ keyword ? 'Kết quả tìm kiếm cho: "' + keyword + '"' : 'Sản phẩm mới nhất' }}</h1>
-    <p>Khám phá bộ sưu tập phong cách và xu hướng mới.</p>
-  </div>
-
-  <div class="product-grid" *ngIf="products.length > 0; else noProducts">
-    <div class="product-card" *ngFor="let product of products; let i = index">
-      <div class="product-image" [routerLink]="['/products', product.id]">
-        <img [src]="product.imageUrl || getPlaceholderImage(product.id || i)" [alt]="product.name">
-        <div class="overlay">
-          <button class="btn view-btn">Xem chi tiết</button>
+<div class="min-h-screen bg-bg-main p-4 md:p-8 lg:p-12 animate-in fade-in duration-700">
+  
+  <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
+    
+    <!-- Sidebar Operational Filter -->
+    <aside class="w-full lg:w-72 space-y-12 flex-shrink-0 lg:sticky lg:top-32 h-fit">
+      
+      <!-- Search Module -->
+      <div class="space-y-4">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted text-left">Tìm kiếm trực tiếp</h3>
+        <div class="relative group">
+          <input 
+            type="text" 
+            [value]="keyword()"
+            (keyup.enter)="updateFilters({keyword: $any($event.target).value})"
+            placeholder="Nhập tên sản phẩm..."
+            class="w-full bg-bg-surface border border-border-strong rounded-radius-sm px-6 py-4 text-[11px] font-black uppercase tracking-widest focus:border-primary focus:bg-bg-card transition-all shadow-sm text-text-main"
+          >
+          <i class="fa-solid fa-magnifying-glass absolute right-5 top-1/2 -translate-y-1/2 text-text-muted group-focus-within:text-primary transition-colors"></i>
         </div>
       </div>
-      <div class="product-info">
-        <div class="product-brand" *ngIf="product.brand?.name">{{ product.brand.name }}</div>
-        <h3 class="product-name" [routerLink]="['/products', product.id]">{{ product.name }}</h3>
-        <p class="product-price">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</p>
+
+      <!-- Collection Taxonomy -->
+      <div class="space-y-6 text-left">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">Danh mục sản phẩm</h3>
+        <div class="flex flex-col gap-3">
+          <a [routerLink]="['/products']" 
+             [class.text-primary]="!categorySlug()"
+             [class.border-primary]="!categorySlug()"
+             class="px-5 py-3 border border-border-subtle bg-bg-surface rounded-radius-sm text-[10px] font-black uppercase tracking-widest transition-all hover:border-primary text-text-main">
+            Tất cả sản phẩm
+          </a>
+          <a [routerLink]="['/category/nam']" 
+             [class.text-primary]="categorySlug() === 'nam'"
+             [class.border-primary]="categorySlug() === 'nam'"
+             class="px-5 py-3 border border-border-subtle bg-bg-surface rounded-radius-sm text-[10px] font-black uppercase tracking-widest transition-all hover:border-primary text-text-main">
+            Thời trang Nam
+          </a>
+          <a [routerLink]="['/category/nu']" 
+             [class.text-primary]="categorySlug() === 'nu'"
+             [class.border-primary]="categorySlug() === 'nu'"
+             class="px-5 py-3 border border-border-subtle bg-bg-surface rounded-radius-sm text-[10px] font-black uppercase tracking-widest transition-all hover:border-primary text-text-main">
+            Thời trang Nữ
+          </a>
+          <a [routerLink]="['/category/phu-kien']" 
+             [class.text-primary]="categorySlug() === 'phu-kien'"
+             [class.border-primary]="categorySlug() === 'phu-kien'"
+             class="px-5 py-3 border border-border-subtle bg-bg-surface rounded-radius-sm text-[10px] font-black uppercase tracking-widest transition-all hover:border-primary text-text-main">
+            Phụ kiện cao cấp
+          </a>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <ng-template #noProducts>
-    <div class="empty-state">
-      <i class="fa-solid fa-box-open empty-icon"></i>
-      <h3>Không tìm thấy sản phẩm nào!</h3>
-      <p>Thử tìm kiếm với từ khoá khác nhé.</p>
-    </div>
-  </ng-template>
+      <!-- Designer Alignment -->
+      <div class="space-y-4 text-left">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">Thương hiệu</h3>
+        <div class="grid grid-cols-2 gap-2">
+          @for (brand of brands(); track brand.id) {
+            <button 
+              (click)="updateFilters({brand: brand.id === selectedBrand() ? null : brand.id})"
+              [class.bg-text-main]="brand.id === selectedBrand()"
+              [class.text-text-inverse]="brand.id === selectedBrand()"
+              class="px-3 py-3 border border-border-strong bg-bg-surface rounded-radius-sm text-[8px] font-black uppercase tracking-widest transition-all hover:border-primary text-text-main"
+            >
+              {{ brand.name }}
+            </button>
+          }
+        </div>
+      </div>
 
-  <!-- Phân trang -->
-  <div class="pagination" *ngIf="totalPages > 1">
-    <button [disabled]="currentPage === 0" (click)="changePage(currentPage - 1)">
-      &laquo; Trước
-    </button>
-    <span class="page-info">Trang {{ currentPage + 1 }} / {{ totalPages }}</span>
-    <button [disabled]="currentPage === totalPages - 1" (click)="changePage(currentPage + 1)">
-      Sau &raquo;
-    </button>
+      <!-- Resource Allocation (Price) -->
+      <div class="space-y-4 text-left">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">Khoảng giá đầu tư</h3>
+        <div class="space-y-2">
+          <button (click)="updateFilters({minPrice: null, maxPrice: 500000})" 
+                  [class.text-primary]="maxPrice() === 500000"
+                  class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-all">
+            <div class="w-4 h-4 rounded-full border border-border-strong flex items-center justify-center">
+              <div class="w-1.5 h-1.5 bg-primary rounded-full transition-opacity" [class.opacity-0]="maxPrice() !== 500000"></div>
+            </div>
+            Dưới 500,000đ
+          </button>
+          <button (click)="updateFilters({minPrice: 500000, maxPrice: 2000000})" 
+                  [class.text-primary]="minPrice() === 500000"
+                  class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-all">
+            <div class="w-4 h-4 rounded-full border border-border-strong flex items-center justify-center">
+              <div class="w-1.5 h-1.5 bg-primary rounded-full transition-opacity" [class.opacity-0]="minPrice() !== 500000"></div>
+            </div>
+            500,000đ - 2,000,000đ
+          </button>
+          <button (click)="updateFilters({minPrice: 2000000, maxPrice: null})" 
+                  [class.text-primary]="minPrice() === 2000000"
+                  class="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-all">
+            <div class="w-4 h-4 rounded-full border border-border-strong flex items-center justify-center">
+              <div class="w-1.5 h-1.5 bg-primary rounded-full transition-opacity" [class.opacity-0]="minPrice() !== 2000000"></div>
+            </div>
+            Trên 2,000,000đ
+          </button>
+        </div>
+      </div>
+
+      <!-- Reset Protocol -->
+      @if (selectedBrand() || minPrice() || maxPrice() || keyword()) {
+        <button (click)="updateFilters({brand: null, minPrice: null, maxPrice: null, keyword: ''})" 
+                class="w-full py-4 border border-accent/20 bg-accent/5 rounded-radius-sm text-[9px] font-black uppercase tracking-[0.2em] text-accent hover:bg-accent hover:text-white transition-all">
+          Xóa tất cả bộ lọc
+        </button>
+      }
+    </aside>
+
+    <!-- Product Grid Architecture -->
+    <div class="flex-grow space-y-12">
+      
+      <!-- Catalog Dynamics -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-strong pb-8">
+        <div class="space-y-2 text-left">
+          <h2 class="text-3xl font-black text-text-main uppercase tracking-tighter leading-none">Catalog Tuyển Chọn</h2>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] font-bold italic">{{ totalItems() }} tuyệt phẩm đang hiển thị</p>
+        </div>
+        
+        <div class="flex items-center gap-6">
+          <span class="text-[9px] font-black uppercase tracking-widest text-text-muted">Sắp xếp theo:</span>
+          <select 
+            (change)="updateFilters({sort: $any($event.target).value})"
+            class="bg-transparent border-0 border-b border-border-strong text-[10px] font-black uppercase tracking-widest focus:ring-0 py-2 cursor-pointer text-text-main"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="price_asc">Giá tăng dần</option>
+            <option value="price_desc">Giá giảm dần</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      @if (loading()) {
+        <div class="py-32 flex flex-col items-center justify-center space-y-8">
+          <div class="w-16 h-px bg-primary animate-pulse"></div>
+          <p class="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted italic">Đang tải danh mục tuyển chọn...</p>
+        </div>
+      } @else if (products().length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          @for (product of products(); track product.id; let i = $index) {
+            <div class="group relative bg-bg-surface border border-border-subtle rounded-radius-lg overflow-hidden shadow-shadow-md hover:shadow-shadow-lg transition-all duration-500 flex flex-col">
+              <!-- Visual Asset -->
+              <div class="aspect-[3/4] overflow-hidden relative bg-bg-main shrink-0">
+                <img 
+                  [src]="product.imageUrl || 'assets/placeholder.png'" 
+                  [alt]="product.name" 
+                  class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                >
+                
+                <!-- Interaction Overlay -->
+                <div class="absolute inset-x-0 bottom-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-gradient-to-t from-black/60 to-transparent">
+                  <button [routerLink]="['/products', product.id]" 
+                          class="w-full bg-text-main text-text-inverse h-14 rounded-radius-full font-black uppercase text-[10px] tracking-[0.3em] shadow-shadow-lg hover:bg-primary transition-all active:scale-95">
+                    Xem chi tiết
+                  </button>
+                </div>
+
+                @if (product.totalStock === 0) {
+                  <span class="absolute top-5 left-5 bg-black text-white text-[8px] font-black px-4 py-2 rounded-radius-sm uppercase tracking-[0.2em] shadow-lg border border-white/20">Hết hàng</span>
+                }
+              </div>
+
+              <!-- Descriptive Payload -->
+              <div class="p-8 flex flex-col flex-grow space-y-6">
+                <div class="flex-grow space-y-2 text-left">
+                  <div class="flex items-center gap-3">
+                    <span class="text-[9px] font-black text-primary uppercase tracking-[0.2em]">{{ product.category?.name || 'Sản phẩm' }}</span>
+                    <div class="h-px w-4 bg-border-subtle"></div>
+                    <span class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em]">{{ product.brand?.name || 'TrendyBox' }}</span>
+                  </div>
+                  <h2 class="text-lg font-black text-text-main leading-tight uppercase tracking-tighter transition-colors group-hover:text-primary">
+                    {{ product.name }}
+                  </h2>
+                </div>
+
+                <div class="flex items-end justify-between pt-6 border-t border-border-subtle">
+                  <div class="space-y-0.5 text-left">
+                     <span class="text-[9px] font-black text-text-muted uppercase tracking-widest block">Giá bán</span>
+                     <span class="text-xl font-black text-text-main tracking-tighter leading-none italic">{{ product.price | number:'1.0-0' }}₫</span>
+                  </div>
+                  <button [routerLink]="['/products', product.id]" 
+                          class="w-12 h-12 rounded-radius-full bg-bg-main border border-border-strong flex items-center justify-center text-text-main hover:bg-text-main hover:text-text-inverse transition-all">
+                    <i class="fa-solid fa-arrow-right-long text-sm"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination Flow -->
+        @if (totalPages() > 1) {
+          <div class="mt-24 flex items-center justify-center gap-4">
+            <button (click)="changePage(currentPage() - 1)" 
+                    [disabled]="currentPage() === 0"
+                    class="w-14 h-14 rounded-radius-full border border-border-subtle bg-bg-surface flex items-center justify-center text-text-main hover:border-primary hover:text-primary disabled:opacity-20 transition-all shadow-sm">
+              <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+
+            <div class="flex items-center gap-2">
+              @for (page of [].constructor(totalPages()); track $index) {
+                <button (click)="changePage($index)"
+                        [class.bg-text-main]="$index === currentPage()"
+                        [class.text-text-inverse]="$index === currentPage()"
+                        [class.border-text-main]="$index === currentPage()"
+                        class="w-14 h-14 rounded-radius-full font-black text-[10px] border border-border-subtle bg-bg-surface hover:border-primary hover:text-primary transition-all text-text-main">
+                  {{ $index + 1 }}
+                </button>
+              }
+            </div>
+
+            <button (click)="changePage(currentPage() + 1)" 
+                    [disabled]="currentPage() === totalPages() - 1"
+                    class="w-14 h-14 rounded-radius-full border border-border-subtle bg-bg-surface flex items-center justify-center text-text-main hover:border-primary hover:text-primary disabled:opacity-20 transition-all shadow-sm">
+              <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+          </div>
+        }
+      } @else {
+        <!-- Empty Identification State -->
+        <div class="py-32 text-center animate-in fade-in duration-1000 bg-bg-surface rounded-radius-lg border-2 border-dashed border-border-strong">
+          <div class="w-24 h-24 bg-bg-main rounded-radius-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <i class="fa-solid fa-satellite-dish text-4xl text-border-strong"></i>
+          </div>
+          <h3 class="text-3xl font-black text-text-main uppercase tracking-tighter">Không tìm thấy sản phẩm</h3>
+          <p class="text-text-muted text-[10px] font-black uppercase tracking-[0.2em] mt-4 max-w-sm mx-auto leading-relaxed">Chúng tôi không tìm thấy kết quả nào phù hợp với bộ lọc hiện tại của bạn. Vui lòng thử lại với các tiêu chí khác.</p>
+          <button (click)="updateFilters({brand: null, minPrice: null, maxPrice: null, keyword: ''})" 
+                  class="mt-10 px-10 h-14 bg-text-main text-text-inverse rounded-radius-full text-[10px] font-black uppercase tracking-[0.3em] hover:bg-primary transition-all shadow-lg active:scale-95">
+            Đặt lại bộ lọc
+          </button>
+        </div>
+      }
+    </div>
   </div>
 </div>

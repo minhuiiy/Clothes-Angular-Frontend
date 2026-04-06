@@ -1,63 +1,133 @@
-<div class="auth-wrapper">
-  <div class="auth-container">
-    <div class="auth-card shadow">
-      
-      <!-- Title with thick underline -->
-      <div class="auth-header">
-        <h1 class="auth-title">{{ isLoginMode ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ' }}</h1>
-        <div class="title-underline"></div>
+<div class="min-h-screen bg-bg-main flex items-center justify-center p-6 md:p-12 animate-in fade-in duration-1000">
+  
+  <div class="max-w-md w-full space-y-12 bg-bg-surface p-12 rounded-radius-lg border border-border-subtle shadow-shadow-lg relative overflow-hidden">
+    <!-- Aesthetic Background Element -->
+    <div class="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    
+    <!-- Branding & Header -->
+    <div class="text-center space-y-4 relative z-10">
+      <div class="flex items-center justify-center gap-3 mb-8">
+        <div class="w-12 h-[2px] bg-primary/40"></div>
+        <span class="text-primary text-[10px] font-black uppercase tracking-[0.6em] italic">TRENDYBOX STUDIO</span>
+        <div class="w-12 h-[2px] bg-primary/40"></div>
+      </div>
+      <h2 class="text-5xl font-black text-text-main tracking-tighter uppercase italic leading-none">
+        @if (isLoginMode()) { 
+           Khởi động <br> <span class="text-primary">Phiên bản</span> 
+        } @else { 
+           Khởi tạo <br> <span class="text-primary">Danh tính</span> 
+        }
+      </h2>
+      <p class="text-[10px] text-text-muted font-black uppercase tracking-[0.3em] italic">Truy cập vào hệ sinh thái thời trang cao cấp</p>
+    </div>
+
+    <!-- Mode Switcher -->
+    <div class="flex p-1.5 bg-bg-main border border-border-subtle rounded-radius-full relative z-10 shadow-inner">
+      <button 
+        (click)="switchMode(true)"
+        [class.bg-text-main]="isLoginMode()"
+        [class.text-text-inverse]="isLoginMode()"
+        [class.shadow-shadow-sm]="isLoginMode()"
+        class="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-radius-full transition-all duration-500 italic"
+      >
+        Đăng nhập
+      </button>
+      <button 
+        (click)="switchMode(false)"
+        [class.bg-text-main]="!isLoginMode()"
+        [class.text-text-inverse]="!isLoginMode()"
+        [class.shadow-shadow-sm]="!isLoginMode()"
+        class="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-radius-full transition-all duration-500 italic"
+      >
+        Tham gia ngay
+      </button>
+    </div>
+
+    <!-- Auth Form -->
+    <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="space-y-8 relative z-10 text-left">
+      <div class="space-y-6">
+        
+        <!-- Full Name (Register Only) -->
+        @if (!isLoginMode()) {
+          <div class="animate-in fade-in slide-in-from-top-4 duration-500">
+            <label for="fullName" class="block text-[9px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 ml-1 italic">Tố hợp danh tính</label>
+            <input 
+              id="fullName" name="fullName" type="text" required [(ngModel)]="formData.fullName"
+              class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-surface transition-all text-sm font-bold text-text-main shadow-inner outline-none italic placeholder:opacity-30"
+              placeholder="NGUYỄN VĂN A"
+            >
+          </div>
+        }
+
+        <!-- Username -->
+        <div>
+          <label for="username" class="block text-[9px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 ml-1 italic">Mã định danh</label>
+          <input 
+            id="username" name="username" type="text" required [(ngModel)]="formData.username"
+            class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-surface transition-all text-sm font-bold text-text-main shadow-inner outline-none italic placeholder:opacity-30"
+            placeholder="MUSE_IDENTIFIER"
+          >
+        </div>
+
+        <!-- Email (Register Only) -->
+        @if (!isLoginMode()) {
+          <div class="animate-in fade-in slide-in-from-top-4 duration-500">
+            <label for="email" class="block text-[9px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 ml-1 italic">Địa chỉ truyền tin (Email)</label>
+            <input 
+              id="email" name="email" type="email" required [(ngModel)]="formData.email"
+              class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-surface transition-all text-sm font-bold text-text-main shadow-inner outline-none italic placeholder:opacity-30"
+              placeholder="ARCHIVE@MUSE.STUDIO"
+            >
+          </div>
+        }
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-[9px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 ml-1 italic">Mật hiệu truy cập</label>
+          <input 
+            id="password" name="password" type="password" required [(ngModel)]="formData.password"
+            class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-surface transition-all text-sm font-bold text-text-main shadow-inner outline-none italic placeholder:opacity-30"
+            placeholder="••••••••"
+          >
+        </div>
       </div>
 
-      <form (ngSubmit)="onSubmit()" #authForm="ngForm" class="auth-form">
-        <!-- Register only fields -->
-        <div class="form-group" *ngIf="!isLoginMode">
-          <input type="text" name="fullName" [(ngModel)]="formData.fullName" 
-            placeholder="Họ và tên" class="form-input" required>
+      <!-- Feedback Protocols -->
+      @if (errorMessage()) {
+        <div class="p-5 border border-accent/20 bg-accent/5 flex items-center gap-4 animate-in slide-in-from-right-4 duration-500">
+           <i class="fa-solid fa-circle-exclamation text-accent text-lg"></i>
+           <p class="text-[10px] font-black text-accent uppercase tracking-widest italic">{{ errorMessage() }}</p>
         </div>
+      }
 
-        <div class="form-group" *ngIf="!isLoginMode">
-          <input type="email" name="email" [(ngModel)]="formData.email" 
-            placeholder="Email" class="form-input" required>
+      @if (successMessage()) {
+        <div class="p-5 border border-green-500/20 bg-green-500/5 flex items-center gap-4 animate-in slide-in-from-right-4 duration-500">
+           <i class="fa-solid fa-circle-check text-green-500 text-lg"></i>
+           <p class="text-[10px] font-black text-green-600 uppercase tracking-widest italic">{{ successMessage() }}</p>
         </div>
+      }
 
-        <!-- Common fields -->
-        <div class="form-group">
-          <input type="text" name="username" [(ngModel)]="formData.username" 
-            placeholder="Tên tài khoản hoặc email" class="form-input" required>
+      <!-- Operational Trigger -->
+      <button 
+        type="submit" 
+        [disabled]="loading() || !authForm.form.valid"
+        class="w-full h-16 bg-text-main text-text-inverse rounded-radius-full font-black uppercase text-[11px] tracking-[0.4em] flex items-center justify-center gap-4 transition-all hover:bg-primary shadow-shadow-lg active:scale-95 disabled:opacity-30 italic"
+      >
+        @if (loading()) {
+          <i class="fa-solid fa-circle-notch animate-spin"></i>
+          <span>Xác thực danh tính...</span>
+        } @else {
+          <span>{{ isLoginMode() ? 'Kích hoạt phiên bản' : 'Xác thực tài khoản' }}</span>
+          <i class="fa-solid fa-arrow-right-long italic group-hover:translate-x-3 transition-transform"></i>
+        }
+      </button>
+
+      <!-- Recovery Protocol -->
+      @if (isLoginMode()) {
+        <div class="text-center pt-4">
+          <a href="#" class="text-[9px] font-black text-text-muted hover:text-primary uppercase tracking-[0.3em] transition-all italic border-b border-border-subtle pb-1">Khôi phục mật hiệu quên lãng?</a>
         </div>
-
-        <div class="form-group">
-          <input type="password" name="password" [(ngModel)]="formData.password" 
-            placeholder="Mật khẩu" class="form-input" required>
-        </div>
-
-        <button type="submit" class="btn-submit" [disabled]="!authForm.valid">
-          {{ isLoginMode ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ' }}
-        </button>
-
-        <div class="form-footer">
-          <a href="javascript:void(0)" class="footer-link">Quên mật khẩu?</a>
-          <a href="javascript:void(0)" (click)="switchMode(!isLoginMode)" class="footer-link">
-            {{ isLoginMode ? 'Đăng ký tại đây' : 'Đã có tài khoản? Đăng nhập' }}
-          </a>
-        </div>
-
-        <div class="social-login-divider">
-          <span class="divider-text">hoặc đăng nhập qua</span>
-        </div>
-
-        <div class="social-buttons">
-          <button type="button" class="btn-social btn-facebook">
-            <i class="fab fa-facebook-f"></i> Facebook
-          </button>
-          <button type="button" class="btn-social btn-google">
-            <i class="fab fa-google-plus-g"></i> Google
-          </button>
-        </div>
-
-        <div class="alert error" *ngIf="errorMessage">{{ errorMessage }}</div>
-        <div class="alert success" *ngIf="successMessage">{{ successMessage }}</div>
-      </form>
-    </div>
+      }
+    </form>
   </div>
 </div>

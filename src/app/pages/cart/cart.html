@@ -1,58 +1,145 @@
-<div class="cart-container" *ngIf="cart$ | async as cart; else loading">
-  <h1 class="cart-title">Giỏ hàng của bạn</h1>
+<div class="min-h-screen bg-bg-main p-4 md:p-8 lg:p-12 animate-in fade-in duration-700">
+  
+  <div class="max-w-7xl mx-auto space-y-12">
+    
+    <!-- Page Header -->
+    <div class="space-y-4 border-b border-border-subtle pb-8 text-left">
+      <h1 class="text-4xl md:text-5xl font-black text-text-main tracking-tighter uppercase leading-none italic">Giỏ hàng của bạn</h1>
+      <div class="flex items-center gap-4">
+        <span class="text-[10px] font-black text-primary uppercase tracking-[0.4em]">Danh sách sản phẩm đã tuyển chọn</span>
+        <div class="h-px w-20 bg-border-subtle"></div>
+        <span class="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] bg-bg-surface px-4 py-1.5 rounded-full border border-border-subtle">
+           {{ cart()?.totalItems || 0 }} sản phẩm
+        </span>
+      </div>
+    </div>
 
-  <div *ngIf="cart.items.length > 0; else emptyCart" class="cart-content">
-    <div class="cart-items">
-      <div *ngFor="let item of cart.items" class="cart-item">
-        <div class="item-image">
-          <img [src]="item.imageUrl || 'assets/placeholder.jpg'" [alt]="item.productName">
+    @if (cart() && cart()!.items.length > 0) {
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+        
+        <!-- Left: Cart Items -->
+        <div class="lg:col-span-8 space-y-8">
+          @for (item of cart()!.items; track item.id) {
+            <div class="group relative flex flex-col md:flex-row gap-8 p-8 bg-bg-surface border border-border-subtle rounded-radius-lg transition-all hover:border-primary hover:shadow-shadow-lg animate-in slide-in-from-left-4 duration-500">
+              
+              <!-- Product Visual/Thumbnail -->
+              <div class="w-full md:w-32 aspect-[3/4] rounded-radius-md overflow-hidden bg-bg-main shrink-0 border border-border-subtle shadow-inner">
+                <img [src]="item.imageUrl || 'assets/placeholder.png'" 
+                     class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105">
+              </div>
+
+              <!-- Product Details Narrative -->
+              <div class="flex-grow flex flex-col justify-between py-2 text-left">
+                <div class="space-y-4">
+                  <div class="flex justify-between items-start">
+                    <div class="space-y-1">
+                       <h3 class="text-xl font-black text-text-main uppercase tracking-tighter transition-colors group-hover:text-primary">{{ item.productName }}</h3>
+                       <p class="text-[10px] font-black text-text-muted uppercase tracking-widest italic leading-none">{{ item.size }} | {{ item.color }}</p>
+                    </div>
+                    <button (click)="removeItem(item.id)" class="text-text-muted hover:text-accent transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+                  </div>
+                  
+                  <div class="flex flex-wrap items-center gap-10">
+                    <div class="flex flex-col gap-1.5">
+                       <span class="text-[9px] font-black text-text-muted uppercase tracking-widest italic">Giá tuyển chọn</span>
+                       <span class="text-sm font-black text-text-main italic">{{ item.price | number:'1.0-0' }}₫</span>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                       <span class="text-[9px] font-black text-text-muted uppercase tracking-widest italic">Số lượng</span>
+                       <div class="flex items-center bg-bg-main border border-border-strong rounded-radius-full p-1 w-28 h-10 shadow-inner">
+                         <button (click)="updateQuantity(item, -1)" class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary transition-all active:scale-75"><i class="fa-solid fa-minus text-[9px]"></i></button>
+                         <span class="flex-1 text-center font-black text-xs text-text-main">{{ item.quantity }}</span>
+                         <button (click)="updateQuantity(item, 1)" class="w-8 h-8 flex items-center justify-center text-text-main hover:text-primary transition-all active:scale-75"><i class="fa-solid fa-plus text-[9px]"></i></button>
+                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-6 flex justify-between items-end border-t border-border-subtle">
+                   <div class="flex items-center gap-2 text-primary">
+                     <i class="fa-solid fa-shield-check text-[10px]"></i>
+                     <span class="text-[9px] font-black uppercase tracking-widest italic">Sẵn sàng vận chuyển</span>
+                   </div>
+                   <div class="text-right">
+                     <span class="text-[9px] font-black text-text-muted uppercase tracking-widest block mb-1 italic">Kết toán phần</span>
+                     <span class="text-lg font-black text-text-main italic tracking-tighter">{{ (item.price * item.quantity) | number:'1.0-0' }}₫</span>
+                   </div>
+                </div>
+              </div>
+            </div>
+          }
         </div>
-        <div class="item-details">
-          <h3>{{ item.productName }}</h3>
-          <p class="item-price">{{ item.price | currency:'VND' }}</p>
-          <div class="quantity-controls">
-            <button (click)="updateQuantity(item, -1)" [disabled]="item.quantity <= 1">-</button>
-            <span>{{ item.quantity }}</span>
-            <button (click)="updateQuantity(item, 1)">+</button>
+
+        <!-- Right Side: Valuation Protocol -->
+        <aside class="lg:col-span-4 space-y-6">
+          <div class="sticky top-32 space-y-6">
+            <div class="bg-bg-surface border border-border-subtle rounded-radius-lg p-10 space-y-10 shadow-shadow-lg relative overflow-hidden">
+               <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+               
+               <h2 class="text-3xl font-black text-text-main uppercase tracking-tighter relative z-10 italic">Tóm tắt <span class="text-primary italic">chốt đơn</span></h2>
+               
+               <div class="space-y-6 relative z-10 text-left">
+                 <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-text-muted italic">
+                    <span>Giá trị tạm tính</span>
+                    <span class="text-text-main">{{ cart()!.totalAmount | number:'1.0-0' }}₫</span>
+                 </div>
+                 <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-text-muted italic">
+                    <span>Phí điều phối vận chuyển</span>
+                    <span class="text-green-500 font-bold uppercase tracking-[0.2em]">Miễn phí</span>
+                 </div>
+                 <div class="pt-8 border-t border-border-strong flex justify-between items-end">
+                    <div class="space-y-1">
+                       <span class="text-[9px] font-black text-text-muted uppercase tracking-widest block italic">Tổng thanh toán dự kiến</span>
+                       <span class="text-4xl font-black text-primary tracking-tighter leading-none italic">{{ cart()!.totalAmount | number:'1.0-0' }}₫</span>
+                    </div>
+                 </div>
+               </div>
+
+               <button (click)="checkout()" 
+                       class="w-full bg-text-main text-text-inverse h-16 rounded-radius-full font-black uppercase text-[11px] tracking-[0.3em] flex items-center justify-center gap-4 transition-all hover:bg-primary hover:shadow-shadow-md active:scale-95 shadow-shadow-lg italic">
+                 <span>Tiến hành quyết toán</span>
+                 <i class="fa-solid fa-arrow-right-long italic transition-transform group-hover:translate-x-2"></i>
+               </button>
+
+               <!-- Proof of Quality -->
+               <div class="pt-8 border-t border-border-subtle grid grid-cols-3 gap-4">
+                  <div class="flex flex-col items-center gap-2 opacity-30 shadow-sm">
+                     <i class="fa-solid fa-lock text-sm"></i>
+                     <span class="text-[7px] font-black uppercase tracking-widest italic">An toàn</span>
+                  </div>
+                  <div class="flex flex-col items-center gap-2 opacity-30 border-x border-border-subtle shadow-sm">
+                     <i class="fa-solid fa-truck-fast text-sm"></i>
+                     <span class="text-[7px] font-black uppercase tracking-widest italic">Hỏa tốc</span>
+                  </div>
+                  <div class="flex flex-col items-center gap-2 opacity-30 shadow-sm">
+                     <i class="fa-solid fa-rotate text-sm"></i>
+                     <span class="text-[7px] font-black uppercase tracking-widest italic">Đổi mẫu</span>
+                  </div>
+               </div>
+            </div>
+            
+            <a routerLink="/products" class="block w-full text-center text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-text-main transition-colors italic">Tiếp tục tuyển chọn thiết kế</a>
           </div>
-        </div>
-        <div class="item-total">
-          <p>{{ item.subTotal | currency:'VND' }}</p>
-          <button class="remove-btn" (click)="removeItem(item.id)">
-            <i class="fas fa-trash"></i> Xóa
-          </button>
-        </div>
-      </div>
-    </div>
+        </aside>
 
-    <div class="cart-summary">
-      <div class="summary-card">
-        <h2>Tổng cộng</h2>
-        <div class="summary-row">
-          <span>Số lượng sản phẩm:</span>
-          <span>{{ cart.totalItems }}</span>
-        </div>
-        <div class="summary-row total">
-          <span>Thành tiền:</span>
-          <span>{{ cart.totalAmount | currency:'VND' }}</span>
-        </div>
-        <button class="checkout-btn" (click)="checkout()">Thanh toán ngay</button>
-        <a routerLink="/products" class="continue-shopping">Tiếp tục mua sắm</a>
       </div>
-    </div>
+    } @else {
+      <!-- Empty State Cinematic -->
+      <div class="bg-bg-surface border-2 border-dashed border-border-strong rounded-radius-lg p-24 text-center space-y-8 animate-in fade-in zoom-in-95 duration-1000 shadow-inner">
+        <div class="w-32 h-32 bg-bg-main rounded-radius-full flex items-center justify-center mx-auto shadow-inner relative">
+          <i class="fa-solid fa-bag-shopping text-5xl text-border-strong opacity-20"></i>
+          <div class="absolute top-0 right-0 w-8 h-8 bg-primary rounded-full border-4 border-bg-surface animate-bounce shadow-sm"></div>
+        </div>
+        <div class="space-y-4">
+          <h3 class="text-4xl font-black text-text-main uppercase tracking-tighter italic">Hành trình chưa định hình</h3>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] max-w-sm mx-auto leading-relaxed italic">Hãy bắt đầu kiến tạo phong cách của bạn bằng cách chọn những thiết kế ưng ý nhất từ bộ sưu tập cao cấp.</p>
+        </div>
+        <button routerLink="/products" 
+                class="bg-text-main text-text-inverse px-12 h-14 rounded-radius-full font-black uppercase text-[10px] tracking-[0.3em] hover:bg-primary transition-all shadow-lg italic active:scale-95">
+          Khám phá ngay
+        </button>
+      </div>
+    }
+
   </div>
-
-  <ng-template #emptyCart>
-    <div class="empty-cart-message">
-      <i class="fas fa-shopping-cart"></i>
-      <p>Giỏ hàng của bạn đang trống.</p>
-      <a routerLink="/products" class="btn-primary">Mua sắm ngay</a>
-    </div>
-  </ng-template>
 </div>
-
-<ng-template #loading>
-  <div class="loading-spinner">
-    <p>Đang tải giỏ hàng...</p>
-  </div>
-</ng-template>

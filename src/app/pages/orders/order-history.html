@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-bg-surface p-4 md:p-8 animate-in fade-in duration-500">
+  <div class="max-w-5xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-border-subtle flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-text-main">Lịch sử đơn hàng</h1>
+        <p class="text-sm text-text-muted mt-1">Quản lý và theo dõi các đơn hàng bạn đã mua</p>
+      </div>
+      <a routerLink="/products" class="text-sm font-semibold text-primary hover:text-green-700 transition-colors hidden sm:block">
+        Tiếp tục mua sắm <i class="fa-solid fa-arrow-right ml-1"></i>
+      </a>
+    </div>
+
+    @if (orders().length > 0) {
+      <div class="space-y-4">
+        @for (order of orders(); track order.id) {
+          <!-- Standard E-commerce Order Card -->
+          <div class="bg-white rounded-lg shadow-sm border border-border-subtle overflow-hidden hover:shadow-md transition-shadow">
+            
+            <!-- Order Card Header -->
+            <div class="p-4 bg-gray-50/50 border-b border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex items-center gap-3">
+                <span class="font-bold text-text-main text-sm">#ORD-{{ order.id }}</span>
+                <span class="text-gray-300">|</span>
+                <span class="text-sm text-text-muted"><i class="fa-regular fa-calendar mr-1"></i> {{ order.createdAt | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span [class]="'px-3 py-1 text-xs font-semibold rounded ' + getStatusBadgeClass(order.status)">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Order Products Preview -->
+            <div class="divide-y divide-border-subtle">
+              @for (item of order.items; track item.id; let i = $index) {
+                <!-- Show only first 2 items, or summarize later -->
+                <div class="p-4 flex gap-4 hover:bg-[#fefee5]/30 transition-colors" *ngIf="i < 2">
+                  <img [src]="item.variant?.product?.imageUrl || 'assets/placeholder.png'" 
+                       class="w-20 h-20 object-cover rounded border border-border-subtle flex-shrink-0 bg-white">
+                  
+                  <div class="flex-grow">
+                    <h3 class="text-sm font-bold text-text-main line-clamp-2 hover:text-primary transition-colors cursor-pointer" [routerLink]="['/products', item.variant?.product?.id]">{{ item.variant?.product?.name }}</h3>
+                    <p class="text-xs text-text-muted mt-1">Phân loại: {{ item.variant?.color }}, {{ item.variant?.size }}</p>
+                    <p class="text-xs font-semibold text-text-main mt-2 sm:hidden">x{{ item.quantity }}</p>
+                  </div>
+
+                  <div class="text-right hidden sm:block min-w-[100px]">
+                     <p class="text-sm text-text-main">{{ item.price | number:'1.0-0' }}₫</p>
+                     <p class="text-xs text-text-muted mt-1">x{{ item.quantity }}</p>
+                  </div>
+                </div>
+              }
+              @if (order.items.length > 2) {
+                <div class="p-3 text-center bg-gray-50">
+                  <p class="text-xs text-text-muted">Xem thêm {{ order.items.length - 2 }} sản phẩm khác...</p>
+                </div>
+              }
+            </div>
+
+            <!-- Order Card Footer -->
+            <div class="p-4 border-t border-border-subtle flex flex-col sm:flex-row justify-between items-center gap-4 bg-white">
+              <div class="text-sm">
+                <span class="text-text-muted">Tổng tiền hàng: </span>
+                <span class="text-lg font-bold text-primary">{{ order.totalAmount | number:'1.0-0' }}₫</span>
+              </div>
+              
+              <div class="flex gap-3 w-full sm:w-auto">
+                <a [routerLink]="['/orders', order.id]" class="flex-1 sm:flex-none text-center px-6 py-2 border border-border-subtle text-text-main rounded text-sm font-semibold hover:bg-gray-50 transition-colors">
+                  Xem chi tiết
+                </a>
+                <!-- Optional 'Review' quick button if Delivered -->
+                @if (order.status === 'DELIVERED') {
+                  <a [routerLink]="['/orders', order.id]" class="flex-1 sm:flex-none text-center px-6 py-2 bg-primary text-white rounded text-sm font-semibold hover:bg-gray-800 transition-colors shadow-sm">
+                    Đánh giá
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <div class="bg-white rounded-lg shadow-sm border border-border-subtle p-12 text-center flex flex-col items-center justify-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <i class="fa-solid fa-receipt text-3xl text-gray-400"></i>
+        </div>
+        <h2 class="text-lg font-bold text-text-main mb-2">Chưa có đơn hàng</h2>
+        <p class="text-sm text-text-muted mb-6">Bạn chưa có đơn hàng nào. Hãy mua sắm để lấp đầy giỏ hàng nhé.</p>
+        <a routerLink="/products" class="bg-primary text-white px-8 py-3 rounded-md text-sm font-semibold hover:bg-gray-800 transition-colors shadow-sm">
+          Mua sắm ngay
+        </a>
+      </div>
+    }
+  </div>
+</div>

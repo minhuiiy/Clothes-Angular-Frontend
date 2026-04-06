@@ -1,0 +1,106 @@
+<div class="space-y-12 animate-in fade-in duration-1000">
+  
+  <!-- Header: Brand Management -->
+  <header class="flex flex-col md:flex-row justify-between items-end gap-8 pb-10 border-b border-outline-variant/10">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-px bg-primary/40"></span>
+        <p class="font-label text-[10px] tracking-[0.4em] text-primary uppercase font-bold">Provenance</p>
+      </div>
+      <h1 class="font-headline text-5xl font-bold tracking-tighter uppercase text-on-surface">Quản lý thương hiệu</h1>
+      <p class="font-body text-xs text-outline uppercase tracking-widest italic">Di sản và nguồn gốc nghệ thuật</p>
+    </div>
+    
+    <button (click)="openAddModal()" 
+            class="px-8 py-4 bg-on-surface text-surface font-label text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-primary-dim transition-all shadow-editorial flex items-center gap-3">
+      <span class="material-symbols-outlined text-sm">add</span>
+      Thêm thương hiệu
+    </button>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="py-32 flex flex-col items-center justify-center gap-6">
+     <div class="w-16 h-px bg-on-surface/20 animate-pulse"></div>
+     <p class="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Đang tải di sản thương hiệu...</p>
+  </div>
+
+  <!-- Brands Grid (The Editorial Bento) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" *ngIf="!loading()">
+    <div *ngFor="let brand of brands()" 
+         class="group bg-surface border border-outline-variant/10 p-8 space-y-8 hover:bg-surface-container-low transition-all duration-500 relative overflow-hidden flex flex-col justify-between min-h-[200px]">
+      
+      <!-- Background Asset (Subtle) -->
+      <div *ngIf="brand.imageUrl" class="absolute inset-0 opacity-10 group-hover:opacity-20 transition-all duration-1000 pointer-events-none mix-blend-multiply">
+         <img [src]="brand.imageUrl" alt="Texture" class="w-full h-full object-cover">
+         <div class="absolute inset-0 bg-gradient-to-t from-bg-surface to-transparent"></div>
+      </div>
+
+      <div class="space-y-4 relative z-10 w-full">
+        <div class="flex justify-between items-start">
+           <span class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold italic">Brand ID #{{ brand.id }}</span>
+           <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-bg-surface/50 p-1 rounded-sm backdrop-blur-sm">
+              <button (click)="openEditModal(brand)" class="material-symbols-outlined text-sm text-outline hover:text-on-surface transition-colors">edit</button>
+              <button (click)="deleteBrand(brand.id)" class="material-symbols-outlined text-sm text-outline hover:text-error transition-colors">delete</button>
+           </div>
+        </div>
+        <h3 class="font-headline text-3xl font-black uppercase tracking-tight text-on-surface hover:text-primary transition-colors cursor-pointer" style="word-wrap: break-word;">{{ brand.name }}</h3>
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/10 relative z-10">
+         <p class="font-label text-[10px] text-outline uppercase tracking-[0.2em] leading-relaxed line-clamp-2 italic">{{ brand.description || 'Chưa định hình bản sắc thương hiệu.' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Form Thương Hiệu -->
+  <div *ngIf="showModal()" class="fixed inset-0 z-[110] flex items-center justify-center p-6">
+    <div class="absolute inset-0 bg-bg-surface/80 backdrop-blur-sm" (click)="closeModal()"></div>
+    
+    <div class="w-full max-w-lg bg-bg-main relative z-10 editorial-shadow animate-in zoom-in-95 duration-500 overflow-hidden border border-border-subtle shadow-shadow-lg">
+      <header class="bg-text-main text-text-inverse p-8">
+         <h2 class="font-headline text-2xl font-bold uppercase tracking-tighter italic">
+           {{ isEditing() ? 'Cập nhật di sản' : 'Thêm thương hiệu mới' }}
+         </h2>
+         <p class="font-label text-[9px] tracking-[0.4em] uppercase font-bold opacity-60">Architectural Provenance</p>
+      </header>
+
+      <form (submit)="saveBrand()" class="p-10 space-y-10">
+        
+        <!-- Name -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="brandName">Danh xưng thương hiệu *</label>
+          <input [(ngModel)]="brandForm.name" name="name" id="brandName" type="text" required
+                 class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-xl font-headline font-black uppercase p-0 pb-2 transition-colors placeholder:text-outline-variant/30"
+                 placeholder="VÍ DỤ: GUCCI, YSL...">
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="brandDesc">Bản sắc di sản (Mô tả)</label>
+          <textarea [(ngModel)]="brandForm.description" name="description" id="brandDesc" rows="5"
+                    class="w-full bg-surface-container-low border border-outline-variant/10 focus:border-on-surface focus:ring-0 text-[11px] p-5 transition-all resize-none font-bold uppercase tracking-[0.1em] leading-relaxed placeholder:text-outline-variant/30"
+                    placeholder="MÔ TẢ NGẮN GỌN VỀ NGUỒN GỐC VÀ ĐỊNH HƯỚNG CỦA THƯƠNG HIỆU NÀY..."></textarea>
+        </div>
+
+        <!-- Image URL -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="brandImg">Logo / Biểu tượng (URL)</label>
+          <input [(ngModel)]="brandForm.imageUrl" name="imageUrl" id="brandImg" type="text"
+                 class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-[9px] p-0 pb-2 transition-colors underline decoration-dotted decoration-outline/20">
+        </div>
+
+        <div class="flex gap-4 pt-10">
+           <button type="button" (click)="closeModal()" 
+                   class="flex-1 py-5 border border-border-strong font-label text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all italic text-text-main hover:text-primary">
+             Hủy bỏ
+           </button>
+           <button type="submit" 
+                   class="flex-1 py-5 bg-text-main text-text-inverse font-label text-[10px] font-bold uppercase tracking-widest hover:bg-primary transition-all shadow-editorial-lg italic">
+             Xác nhận lưu
+           </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

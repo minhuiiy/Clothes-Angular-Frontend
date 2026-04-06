@@ -1,0 +1,138 @@
+<div class="space-y-12 animate-in fade-in duration-1000">
+  
+  <!-- Header: Member Management Protocol -->
+  <header class="flex flex-col md:flex-row justify-between items-end gap-8 pb-10 border-b border-border-strong text-left">
+    <div class="space-y-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-px bg-primary/40"></div>
+        <p class="text-primary text-[10px] font-black uppercase tracking-[0.5em] italic">Quản trị nhân sự hệ thống</p>
+      </div>
+      <h1 class="text-5xl font-black text-text-main tracking-tighter uppercase italic leading-none">Danh sách <span class="text-primary">thành viên</span></h1>
+      <p class="text-[10px] text-text-muted font-black uppercase tracking-[0.3em] italic">Hiển thị {{ users().length }} danh tính người dùng đang vận hành</p>
+    </div>
+  </header>
+
+  <!-- Main Operational Grid -->
+  <div class="bg-bg-surface border border-border-subtle rounded-radius-lg overflow-hidden shadow-shadow-lg text-left relative">
+    
+    <!-- Table Narrative -->
+    <div class="overflow-x-auto no-scrollbar">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-bg-main border-b border-border-subtle text-[10px] font-black uppercase tracking-[0.4em] text-text-muted">
+            <th class="py-8 px-10">Danh tính & Chi tiết</th>
+            <th class="py-8 px-10">Thông tin liên lạc</th>
+            <th class="py-8 px-10">Vai trò hệ thống</th>
+            <th class="py-8 px-10">Ngày khởi tạo</th>
+            <th class="py-8 px-10 text-right">Phân quyền</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border-subtle">
+          @if (loading()) {
+            <tr>
+              <td colspan="5" class="py-32 text-center animate-pulse">
+                <i class="fa-solid fa-spinner fa-spin text-primary text-3xl mb-4"></i>
+                <p class="text-[10px] font-black uppercase tracking-widest text-text-muted italic">Đang đồng bộ dữ liệu người dùng...</p>
+              </td>
+            </tr>
+          } @else if (error()) {
+            <tr>
+              <td colspan="5" class="py-24 text-center">
+                <div class="bg-accent/10 p-8 rounded-radius-md inline-block border border-accent/20">
+                  <i class="fa-solid fa-triangle-exclamation text-accent text-3xl mb-4"></i>
+                  <p class="text-[10px] font-black uppercase tracking-widest text-accent italic">{{ error() }}</p>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (user of users(); track user.id) {
+              <tr class="group hover:bg-bg-main transition-all duration-500">
+                <!-- User Identity -->
+                <td class="py-8 px-10">
+                  <div class="flex items-center gap-6">
+                    <div class="w-14 h-14 bg-text-main text-text-inverse rounded-radius-full flex items-center justify-center font-black text-xl shadow-editorial group-hover:scale-110 transition-transform">
+                      {{ (user.fullName?.[0] || user.username?.[0] || 'U').toUpperCase() }}
+                    </div>
+                    <div class="space-y-1">
+                      <p class="text-lg font-black uppercase tracking-tighter text-text-main italic leading-none group-hover:text-primary transition-colors">{{ user.fullName || 'Người dùng mới' }}</p>
+                      <p class="text-[9px] font-black text-text-muted uppercase tracking-widest italic opacity-70">UID: #{{ user.id }}</p>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Communication Data -->
+                <td class="py-8 px-10">
+                  <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                      <i class="fa-solid fa-envelope text-[10px] text-primary opacity-40"></i>
+                      <span class="text-sm font-bold text-text-main italic">{{ user.email }}</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                      <i class="fa-solid fa-phone text-[10px] text-primary opacity-40"></i>
+                      <span class="text-[11px] font-bold text-text-muted uppercase tracking-widest">{{ user.phoneNumber || 'CHƯA CẬP NHẬT' }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Role Status -->
+                <td class="py-8 px-10">
+                  <div class="flex flex-col gap-2">
+                    <span class="px-5 py-1.5 rounded-radius-full text-[9px] font-black uppercase tracking-widest border shadow-inner text-center"
+                          [ngClass]="getRoleBadgeClass(user.role)">
+                      {{ user.role === 'ADMIN' ? 'TỔNG QUẢN TRỊ' : (user.role === 'STAFF' ? 'NHÂN VIÊN VẬN HÀNH' : 'NGƯỜI DÙNG') }}
+                    </span>
+                    <span *ngIf="!user.active" class="text-[7px] text-accent font-black uppercase tracking-[0.3em] animate-pulse text-center">Bị vô hiệu hóa</span>
+                  </div>
+                </td>
+
+                <!-- Temporal Registry -->
+                <td class="py-8 px-10">
+                   <div class="flex flex-col gap-1 text-[10px] font-black uppercase tracking-widest italic text-text-muted">
+                      <span>{{ user.createdAt | date:'dd / MM / yyyy' }}</span>
+                      <span class="text-[8px] opacity-40">{{ user.createdAt | date:'HH:mm:ss' }}</span>
+                   </div>
+                </td>
+
+                <!-- Actions Integration -->
+                <td class="py-8 px-10 text-right">
+                  <div class="flex justify-end items-center gap-4 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                    <!-- Role Switcher -->
+                    <div class="relative group/role">
+                      <button class="w-10 h-10 border border-border-strong rounded-sm hover:bg-text-main hover:text-text-inverse transition-all shadow-sm flex items-center justify-center">
+                        <i class="fa-solid fa-user-shield text-xs"></i>
+                      </button>
+                      <div class="absolute right-0 top-full mt-2 bg-bg-surface border border-border-subtle shadow-shadow-xl p-2 hidden group-hover/role:block z-50 min-w-[150px] animate-in slide-in-from-top-2 duration-300">
+                        <p class="px-4 py-2 text-[7px] font-black text-text-muted uppercase tracking-[0.2em] border-b border-border-subtle mb-1 italic">Thay đổi thẩm quyền</p>
+                        <button (click)="updateRole(user.id, 'ADMIN')" class="w-full text-left px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:bg-primary/5 text-primary transition-colors">Cấp quyền ADMIN</button>
+                        <button (click)="updateRole(user.id, 'STAFF')" class="w-full text-left px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:bg-accent/5 text-accent transition-colors">Cấp quyền STAFF</button>
+                        <button (click)="updateRole(user.id, 'USER')" class="w-full text-left px-4 py-2 text-[9px] font-black uppercase tracking-widest hover:bg-stone-100 text-text-muted transition-colors">Quyền NGƯỜI DÙNG</button>
+                      </div>
+                    </div>
+
+                    <!-- Ban/Unban -->
+                    <button (click)="toggleStatus(user.id)" 
+                            [title]="user.active ? 'Vô hiệu hóa thông hành' : 'Khôi phục thông hành'"
+                            class="w-10 h-10 border border-border-strong rounded-sm transition-all shadow-sm flex items-center justify-center"
+                            [ngClass]="user.active ? 'hover:bg-accent hover:text-text-inverse border-accent/20' : 'bg-primary text-text-inverse hover:bg-primary-dim border-primary/40'">
+                      <i class="fa-solid" [ngClass]="user.active ? 'fa-user-slash' : 'fa-user-check'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Institutional Footer Narrative -->
+    <div class="p-8 bg-bg-main border-t border-border-subtle flex justify-between items-center bg-stone-50/50">
+       <p class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] italic">Dữ liệu được trích xuất từ TRENDYBOX SECURE SERVER</p>
+       <div class="flex gap-4">
+          <button class="px-6 py-2 border border-border-strong text-[9px] font-black uppercase tracking-widest italic hover:bg-white transition-all shadow-sm">Trang trước</button>
+          <button class="px-6 py-2 bg-text-main text-text-inverse text-[9px] font-black uppercase tracking-widest italic hover:bg-primary transition-all shadow-md">Trang tiếp</button>
+       </div>
+    </div>
+
+  </div>
+</div>

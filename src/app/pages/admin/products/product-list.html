@@ -1,0 +1,116 @@
+<div class="space-y-12 animate-in fade-in duration-1000">
+  
+  <!-- Header: Product Inventory -->
+  <header class="flex flex-col md:flex-row justify-between items-end gap-8 pb-10 border-b border-outline-variant/10">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-px bg-primary/40"></span>
+        <p class="font-label text-[10px] tracking-[0.4em] text-primary uppercase font-bold">Quản lý kho hàng</p>
+      </div>
+      <h1 class="font-headline text-5xl font-bold tracking-tighter uppercase text-on-surface">Danh mục sản phẩm</h1>
+      <p class="font-body text-xs text-outline uppercase tracking-widest italic">Hiển thị {{ products.length }} / {{ totalItems }} sản phẩm đang lưu hành</p>
+    </div>
+    
+    <div class="flex gap-4">
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg group-focus-within:text-on-surface transition-colors">search</span>
+        <input [(ngModel)]="keyword" (ngModelChange)="onSearch()" type="text" placeholder="TÌM THEO TÊN..."
+               class="pl-12 pr-6 py-4 bg-surface-container-low border border-outline-variant/20 focus:border-on-surface focus:ring-0 text-[10px] font-bold uppercase tracking-widest w-64 transition-all">
+      </div>
+      <a routerLink="/admin/products/new" 
+         class="px-8 py-4 bg-on-surface text-surface font-label text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-primary-dim transition-all shadow-editorial flex items-center gap-3">
+        <span class="material-symbols-outlined text-sm">add</span>
+        Thêm mới
+      </a>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="py-32 flex flex-col items-center justify-center gap-6">
+     <div class="w-16 h-px bg-on-surface/20 animate-pulse"></div>
+     <p class="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Đang truy xuất dữ liệu kho...</p>
+  </div>
+
+  <!-- Product Table (The Editorial Grid) -->
+  <div class="w-full bg-surface border border-outline-variant/10 overflow-hidden" *ngIf="!loading">
+    <table class="min-w-full divide-y divide-outline-variant/10">
+      <thead>
+        <tr class="text-left font-label text-[9px] uppercase tracking-[0.3em] font-bold text-outline bg-surface-container-low/30">
+          <th class="py-6 px-8">Thông tin sản phẩm</th>
+          <th class="py-6 px-8">Danh mục</th>
+          <th class="py-6 px-8">Đơn giá</th>
+          <th class="py-6 px-8">Trạng thái</th>
+          <th class="py-6 px-8 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-outline-variant/10">
+        <tr *ngFor="let product of products" class="group hover:bg-surface-container-low/30 transition-all">
+          <!-- Info Column -->
+          <td class="py-8 px-8">
+            <div class="flex items-center gap-6">
+              <div class="w-16 h-20 bg-surface-container-low shrink-0 overflow-hidden border border-outline/5 relative">
+                <img [src]="product.imageUrl || 'assets/placeholder.png'" 
+                     class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </div>
+              <div class="space-y-1">
+                <p class="font-headline text-sm font-bold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors">{{ product.name }}</p>
+                <p class="font-label text-[9px] text-outline uppercase tracking-widest font-bold">SKU: #{{ product.id }}</p>
+              </div>
+            </div>
+          </td>
+          <!-- Category -->
+          <td class="py-8 px-8">
+            <span class="font-label text-[10px] font-bold uppercase tracking-widest text-outline">{{ product.category?.name || 'CHƯA PHÂN LOẠI' }}</span>
+          </td>
+          <!-- Price -->
+          <td class="py-8 px-8">
+            <div class="flex flex-col">
+              <span class="font-headline text-lg font-bold italic">{{ product.price | number:'1.0-0' }}₫</span>
+              <span class="text-[9px] text-primary font-bold uppercase tracking-widest italic" *ngIf="product.discountPrice">Giảm giá áp dụng</span>
+            </div>
+          </td>
+          <!-- Status (Stock) -->
+          <td class="py-8 px-8">
+            <div class="flex items-center gap-3">
+              <span class="w-2 h-2 rounded-full" [class.bg-success]="product.active" [class.bg-error]="!product.active"></span>
+              <span class="font-label text-[10px] font-bold uppercase tracking-widest" [class.text-on-surface]="product.active" [class.text-outline]="!product.active">
+                {{ product.active ? 'Đang bán' : 'Ngừng bán' }}
+              </span>
+            </div>
+          </td>
+          <!-- Actions -->
+          <td class="py-8 px-8 text-right">
+            <div class="flex justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+               <a [routerLink]="['/admin/products/edit', product.id]" 
+                  class="w-10 h-10 flex items-center justify-center border border-on-surface/10 hover:border-on-surface hover:bg-on-surface hover:text-surface transition-all">
+                  <span class="material-symbols-outlined text-lg">edit</span>
+               </a>
+               <button (click)="deleteProduct(product.id)" 
+                       class="w-10 h-10 flex items-center justify-center border border-on-surface/10 hover:border-error hover:bg-error hover:text-surface transition-all">
+                  <span class="material-symbols-outlined text-lg">delete</span>
+               </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination: The Minimalist Muse -->
+    <footer class="p-8 border-t border-outline-variant/10 flex items-center justify-between bg-surface-container-low/10">
+      <p class="font-label text-[9px] text-outline uppercase font-bold tracking-[0.2em]">Trang {{ currentPage + 1 }} / {{ Math.ceil(totalItems / pageSize) }}</p>
+      
+      <div class="flex gap-4">
+        <button (click)="prevPage()" [disabled]="currentPage === 0" 
+                class="w-12 h-12 flex items-center justify-center border border-outline-variant/20 hover:bg-on-surface hover:text-surface transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-on-surface">
+          <span class="material-symbols-outlined">west</span>
+        </button>
+        <button (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= totalItems" 
+                class="w-12 h-12 flex items-center justify-center border border-outline-variant/20 hover:bg-on-surface hover:text-surface transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-on-surface">
+          <span class="material-symbols-outlined">east</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+</div>

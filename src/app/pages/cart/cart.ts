@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/services/cart.service';
 import { Cart, CartItem } from '../../shared/models/cart.model';
-import { Observable } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './cart.html',
-  styleUrl: './cart.css'
 })
 export class CartComponent implements OnInit {
-  cart$: Observable<Cart | null>;
+  private cartService = inject(CartService);
+  private router = inject(Router);
 
-  constructor(private cartService: CartService) {
-    this.cart$ = this.cartService.cart$;
-  }
+  // Convert Observable to Signal
+  cart = toSignal(this.cartService.cart$);
 
   ngOnInit(): void {
     this.cartService.loadCart();
@@ -37,6 +36,6 @@ export class CartComponent implements OnInit {
   }
 
   checkout(): void {
-    alert('Tính năng thanh toán đang được phát triển!');
+    this.router.navigate(['/checkout']);
   }
 }

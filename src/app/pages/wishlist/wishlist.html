@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-bg-main p-8 md:p-12 lg:p-16 animate-in fade-in duration-700">
+  <div class="max-w-7xl mx-auto space-y-12">
+    
+    <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-strong pb-8">
+      <div class="space-y-2 text-left">
+        <h1 class="text-4xl md:text-5xl font-black text-text-main tracking-tighter uppercase leading-none">Danh sách yêu thích <span class="text-primary">({{ wishlistCount() }})</span></h1>
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] font-black text-text-muted uppercase tracking-[0.4em]">Bộ sưu tập cá nhân của bạn</span>
+          <div class="h-px w-20 bg-border-subtle"></div>
+        </div>
+      </div>
+      <a routerLink="/products" class="group flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-all">
+        Tiếp tục mua sắm
+        <i class="fa-solid fa-arrow-right-long group-hover:translate-x-2 transition-transform"></i>
+      </a>
+    </header>
+
+    @if (wishlistItems().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (product of wishlistItems(); track product.id) {
+          <div class="group relative bg-bg-surface border border-border-subtle rounded-radius-lg overflow-hidden shadow-shadow-md hover:shadow-shadow-lg transition-all duration-500 flex flex-col">
+            <!-- Visual Asset -->
+            <div class="aspect-[3/4] overflow-hidden relative bg-bg-main shrink-0">
+              <img [src]="product.images && product.images.length > 0 ? product.images[0] : 'assets/placeholder.png'" 
+                   [alt]="product.name" 
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
+              
+              <!-- Quick Action Overlay -->
+              <div class="absolute inset-0 bg-black/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                <button (click)="removeFromWishlist(product.id)" 
+                        class="w-14 h-14 bg-bg-surface rounded-radius-full flex items-center justify-center text-accent hover:bg-accent hover:text-text-inverse transition-all shadow-shadow-lg transform translate-y-6 group-hover:translate-y-0 duration-300">
+                  <i class="fa-solid fa-trash-can text-lg"></i>
+                </button>
+                <a [routerLink]="['/products', product.id]" 
+                   class="w-14 h-14 bg-text-main rounded-radius-full flex items-center justify-center text-text-inverse hover:bg-primary transition-all shadow-shadow-lg transform translate-y-6 group-hover:translate-y-0 duration-300 delay-75">
+                  <i class="fa-solid fa-eye text-lg"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Content Narrative -->
+            <div class="p-8 space-y-4 flex flex-col flex-grow text-left">
+              <div class="flex justify-between items-start">
+                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">{{ product.category?.name || 'Sản phẩm' }}</span>
+                <span class="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{{ product.brand?.name || 'TrendyBox' }}</span>
+              </div>
+              
+              <h3 class="text-sm font-black text-text-main leading-tight line-clamp-2 uppercase tracking-tighter group-hover:text-primary transition-colors flex-grow">
+                {{ product.name }}
+              </h3>
+
+              <div class="pt-4 border-t border-border-subtle flex items-center justify-between mt-auto">
+                <span class="text-lg font-black text-text-main tracking-tighter italic">{{ product.price | number:'1.0-0' }}₫</span>
+                <button [routerLink]="['/products', product.id]" 
+                        class="text-[10px] font-black uppercase tracking-[0.2em] text-text-main hover:text-primary transition-colors underline underline-offset-8 decoration-2">
+                    Mua ngay
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty Curation State -->
+      <div class="flex flex-col items-center justify-center py-32 text-center space-y-8 animate-in zoom-in duration-500">
+        <div class="relative">
+            <div class="w-32 h-32 bg-bg-surface border border-border-subtle rounded-radius-full flex items-center justify-center shadow-shadow-lg">
+                <i class="fa-regular fa-heart text-5xl text-border-strong opacity-20"></i>
+            </div>
+            <div class="absolute -top-2 -right-2 w-10 h-10 bg-primary rounded-radius-full flex items-center justify-center text-white text-xs animate-bounce shadow-lg">
+                <i class="fa-solid fa-sparkles"></i>
+            </div>
+        </div>
+        
+        <div class="space-y-2">
+            <h2 class="text-2xl font-black text-text-main uppercase tracking-tighter italic">Chưa có sản phẩm nào</h2>
+            <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] max-w-sm mx-auto leading-relaxed italic">
+                Hãy bắt đầu hành trình phong cách của bạn bằng cách thêm những thiết kế ưng ý nhất vào danh sách lưu trữ.
+            </p>
+        </div>
+
+        <a routerLink="/products" class="h-16 px-12 bg-text-main text-text-inverse rounded-radius-full text-[11px] font-black uppercase tracking-[0.3em] hover:bg-primary transition-all active:scale-[0.98] shadow-shadow-lg flex items-center">
+          Khám phá bộ sưu tập
+        </a>
+      </div>
+    }
+  </div>
+</div>

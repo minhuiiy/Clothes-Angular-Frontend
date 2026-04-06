@@ -1,0 +1,165 @@
+<div class="min-h-screen bg-bg-main p-4 md:p-8 lg:p-12 animate-in fade-in duration-700">
+  
+  <!-- Header: Executive Narrative -->
+  <header class="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-border-strong text-left">
+    <div class="space-y-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-px bg-primary/40"></div>
+        <p class="text-primary text-[10px] font-black uppercase tracking-[0.5em] italic">Trung tâm chỉ huy vận hành</p>
+      </div>
+      <h1 class="text-5xl font-black text-text-main tracking-tighter uppercase italic leading-none">Bảng điều khiển <span class="text-primary">tổng lực</span></h1>
+      <p class="text-[10px] text-text-muted font-black uppercase tracking-[0.3em] italic">Phân tích thực tế dư lượng và lưu lượng hệ thống</p>
+    </div>
+    <div class="flex items-center gap-4 bg-bg-surface px-8 py-4 rounded-radius-full border border-border-subtle shadow-shadow-sm group">
+      <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+      <span class="text-[10px] font-black uppercase tracking-[0.2em] text-text-main italic">{{ today | date:'EEEE, dd MMMM yyyy' }}</span>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-4 gap-8 animate-pulse">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="h-40 bg-bg-surface rounded-radius-lg border border-border-subtle shadow-inner"></div>
+      }
+      <div class="md:col-span-3 h-[500px] bg-bg-surface rounded-radius-lg border border-border-subtle"></div>
+      <div class="md:col-span-1 space-y-8">
+         <div class="h-64 bg-bg-surface rounded-radius-lg border border-border-subtle"></div>
+         <div class="h-56 bg-primary/20 rounded-radius-lg"></div>
+      </div>
+    </div>
+  } @else if (stats()) {
+    
+    <div class="mt-16 space-y-12">
+      <!-- High-Impact Metrics Bento -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <!-- Revenue Protocol -->
+        <div class="bg-bg-surface p-10 rounded-radius-lg border border-border-subtle group hover:border-primary transition-all shadow-shadow-md relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+          <div class="flex justify-between items-start mb-8 relative z-10">
+            <div class="w-14 h-14 bg-primary/10 rounded-radius-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <i class="fa-solid fa-receipt text-2xl"></i>
+            </div>
+            <div class="flex flex-col items-end">
+               <span class="text-[9px] font-black text-green-500 uppercase tracking-widest">+18.4%</span>
+               <span class="text-[7px] font-bold text-text-muted uppercase tracking-widest italic">vs tháng trước</span>
+            </div>
+          </div>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 italic">Doanh thu tích lũy</p>
+          <h3 class="text-3xl font-black text-text-main tracking-tighter italic">{{ stats().totalRevenue | number:'1.0-0' }}₫</h3>
+        </div>
+
+        <!-- Order Volume -->
+        <div class="bg-bg-surface p-10 rounded-radius-lg border border-border-subtle group hover:border-primary transition-all shadow-shadow-md relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+          <div class="flex justify-between items-start mb-8 relative z-10">
+            <div class="w-14 h-14 bg-primary/10 rounded-radius-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <i class="fa-solid fa-truck-velocity text-2xl"></i>
+            </div>
+            <span class="text-[11px] font-black text-primary bg-primary/10 px-4 py-1 rounded-radius-sm border border-primary/20 shadow-sm">{{ stats().totalOrders }}</span>
+          </div>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 italic">Lưu lượng vận đơn</p>
+          <h3 class="text-3xl font-black text-text-main tracking-tighter italic">Tổng giao dịch</h3>
+        </div>
+
+        <!-- Inventory Architecture -->
+        <div class="bg-bg-surface p-10 rounded-radius-lg border border-border-subtle group hover:border-primary transition-all shadow-shadow-md relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+          <div class="flex justify-between items-start mb-8 relative z-10">
+            <div class="w-14 h-14 bg-primary/10 rounded-radius-md flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <i class="fa-solid fa-boxes-stacked text-2xl"></i>
+            </div>
+          </div>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 italic">Dư lượng danh mục</p>
+          <h3 class="text-3xl font-black text-text-main tracking-tighter italic">{{ stats().totalProducts }} Thiết kế</h3>
+        </div>
+
+        <!-- Network Integrity -->
+        <div class="bg-bg-surface p-10 rounded-radius-lg border border-border-subtle group hover:border-primary transition-all shadow-shadow-md relative overflow-hidden text-left">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+          <div class="flex justify-between items-start mb-8 relative z-10">
+            <div class="w-14 h-14 bg-green-500/10 rounded-radius-md flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform shadow-inner">
+              <i class="fa-solid fa-shield-halved text-2xl"></i>
+            </div>
+          </div>
+          <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] mb-2 italic">Tình trạng hệ thống</p>
+          <h3 class="text-3xl font-black text-green-500 tracking-tighter italic uppercase animate-pulse">Tối ưu</h3>
+        </div>
+      </div>
+
+      <!-- Main Operational Analytics Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Operational Focus: Orders Map/List -->
+        <div class="lg:col-span-8 space-y-8">
+          <div class="bg-bg-surface border border-border-subtle rounded-radius-lg p-10 shadow-shadow-lg text-left">
+             <div class="flex items-center justify-between mb-10 border-b border-border-subtle pb-6">
+                <div class="space-y-1">
+                   <h4 class="text-xl font-black uppercase tracking-tighter text-text-main italic">Phân tích dòng đơn hằng ngày</h4>
+                   <p class="text-[9px] font-black text-text-muted uppercase tracking-widest italic leading-none">Chỉ số 7 ngày giao dịch gần đây</p>
+                </div>
+                <!-- Placeholder for Chart or Controls -->
+                <div class="flex gap-2">
+                   <div class="w-8 h-8 rounded-sm bg-bg-main border border-border-subtle"></div>
+                   <div class="w-8 h-8 rounded-sm bg-bg-main border border-border-subtle"></div>
+                </div>
+             </div>
+             
+             <!-- Illustrative Visualization (Placeholder) -->
+             <div class="aspect-video bg-bg-main rounded-radius-md border-2 border-dashed border-border-strong flex flex-col items-center justify-center space-y-4 opacity-50 shadow-inner group">
+                <i class="fa-solid fa-chart-area text-6xl text-primary opacity-20 group-hover:scale-110 transition-transform"></i>
+                <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.4em] italic">Biểu đồ cơ cấu đang được đồng dịch...</p>
+             </div>
+          </div>
+        </div>
+
+        <!-- Management Sidebar Blocks -->
+        <div class="lg:col-span-4 space-y-8">
+          
+          <!-- Command Console (Quick Actions) -->
+          <div class="bg-bg-surface border border-border-subtle rounded-radius-lg p-10 space-y-10 shadow-shadow-lg text-left">
+             <h4 class="text-[11px] font-black uppercase tracking-[0.3em] text-text-muted border-b border-border-subtle pb-6 italic">Giao thức thực thi nhanh</h4>
+             
+             <div class="grid grid-cols-2 gap-4">
+                <button routerLink="/admin/products" class="flex flex-col items-center justify-center p-6 bg-bg-main rounded-radius-md border border-border-subtle hover:border-primary group transition-all shadow-sm active:scale-95">
+                   <i class="fa-solid fa-plus-circle text-primary text-xl mb-3 group-hover:rotate-180 transition-transform duration-700"></i>
+                   <span class="text-[8px] font-black uppercase tracking-[0.2em] italic">Thiết kế mới</span>
+                </button>
+                <button routerLink="/admin/orders" class="flex flex-col items-center justify-center p-6 bg-bg-main rounded-radius-md border border-border-subtle hover:border-primary group transition-all shadow-sm active:scale-95">
+                   <i class="fa-solid fa-clipboard-list text-primary text-xl mb-3 group-hover:scale-110 transition-transform"></i>
+                   <span class="text-[8px] font-black uppercase tracking-[0.2em] italic">Kiểm tra đơn</span>
+                </button>
+                <button routerLink="/admin/categories" class="flex flex-col items-center justify-center p-6 bg-bg-main rounded-radius-md border border-border-subtle hover:border-primary group transition-all shadow-sm active:scale-95">
+                   <i class="fa-solid fa-layer-group text-primary text-xl mb-3 group-hover:scale-110 transition-transform"></i>
+                   <span class="text-[8px] font-black uppercase tracking-[0.2em] italic">Cơ cấu loại</span>
+                </button>
+                <button class="flex flex-col items-center justify-center p-6 bg-bg-main rounded-radius-md border border-border-subtle hover:border-accent group transition-all shadow-sm active:scale-95">
+                   <i class="fa-solid fa-gear text-text-muted text-xl mb-3 group-hover:rotate-45 transition-transform"></i>
+                   <span class="text-[8px] font-black uppercase tracking-[0.2em] italic text-text-muted">Hệ thống</span>
+                </button>
+             </div>
+          </div>
+
+          <!-- Institutional Guard Card -->
+          <div class="bg-text-main p-10 rounded-radius-lg shadow-shadow-lg relative overflow-hidden group text-left">
+             <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+             <div class="relative z-10 space-y-6">
+                <div class="w-14 h-14 bg-white/10 rounded-radius-full flex items-center justify-center text-white shadow-inner border border-white/5">
+                   <i class="fa-solid fa-fingerprint text-2xl"></i>
+                </div>
+                <div class="space-y-2">
+                   <h4 class="text-sm font-black text-text-inverse uppercase tracking-widest italic">Hệ thống TRENDYBOX Encryption</h4>
+                   <p class="text-[9px] text-text-inverse/40 font-black uppercase tracking-[0.2em] leading-relaxed italic">Phiên làm việc quản trị được mã hóa 256-bit đảm bảo an toàn vận hành tuyệt đối.</p>
+                </div>
+                <button class="w-full h-12 bg-white text-text-main text-[9px] font-black uppercase tracking-[0.4em] rounded-radius-full hover:bg-primary hover:text-text-inverse transition-all shadow-lg active:scale-95 italic">Kiểm tra tệp lệnh</button>
+             </div>
+             <!-- Decorative -->
+             <div class="absolute -bottom-16 -right-16 w-48 h-48 bg-primary/20 rounded-full blur-3xl group-hover:bg-primary/40 transition-colors animate-pulse"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  }
+</div>

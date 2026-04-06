@@ -1,58 +1,217 @@
-<div class="product-detail-container" *ngIf="product">
-  <div class="breadcrumb">
-    <a routerLink="/">Trang chủ</a> &gt; 
-    <a routerLink="/products">Sản phẩm</a> &gt; 
-    <span>{{ product.name }}</span>
-  </div>
-
-  <div class="product-detail-grid">
-    <!-- Cột Hình Ảnh -->
-    <div class="product-image-gallery">
-      <div class="main-image">
-        <img [src]="product.imageUrl || getPlaceholderImage(product.id)" [alt]="product.name">
-      </div>
-    </div>
-
-    <!-- Cột Thông tin -->
-    <div class="product-info-panel">
-      <div class="brand-tag" *ngIf="product.brand?.name">{{ product.brand?.name }}</div>
-      <h1 class="product-title">{{ product.name }}</h1>
-      <div class="product-price">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</div>
+<div class="min-h-screen bg-bg-main p-4 md:p-8 lg:p-12 animate-in fade-in duration-700">
+  
+  @if (product()) {
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
       
-      <div class="divider"></div>
-      
-      <div class="product-description">
-        <h3>Mô tả sản phẩm</h3>
-        <p>{{ product.description || 'Chưa có mô tả cho sản phẩm này.' }}</p>
+      <!-- Left: Visual Asset Gallery -->
+      <div class="w-full lg:w-1/2 space-y-4">
+        <div class="aspect-[3/4] overflow-hidden bg-bg-surface rounded-radius-lg border border-border-subtle shadow-shadow-md group relative">
+          <img [src]="mainImage() || 'assets/placeholder.png'" 
+               class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+               [alt]="product().name">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+        </div>
+        
+        @if (product().images && product().images.length > 1) {
+          <div class="grid grid-cols-4 gap-4">
+            @for (img of product().images; track img) {
+              <button (click)="mainImage.set(img)" 
+                      [class.border-primary]="mainImage() === img"
+                      class="aspect-[3/4] border border-border-subtle rounded-radius-md overflow-hidden bg-bg-surface hover:border-primary transition-all shadow-sm">
+                <img [src]="img" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all">
+              </button>
+            }
+          </div>
+        }
       </div>
 
-      <div class="product-meta">
-        <div class="meta-item" *ngIf="product.category?.name">
-          <span class="meta-label">Danh mục:</span>
-          <span class="meta-value">{{ product.category?.name }}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Tình trạng:</span>
-          <span class="meta-value" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock <= 0">
-            {{ product.stock > 0 ? (product.stock + ' sản phẩm có sẵn') : 'Hết hàng' }}
-          </span>
-        </div>
-      </div>
-
-      <div class="action-section" *ngIf="product.stock > 0">
-        <div class="quantity-selector">
-          <span class="qty-label">Số lượng:</span>
-          <div class="qty-controls">
-            <button class="qty-btn" (click)="decreaseQuantity()">-</button>
-            <input type="number" class="qty-input" [(ngModel)]="quantity" readonly>
-            <button class="qty-btn" (click)="increaseQuantity()">+</button>
+      <!-- Right: Product Narrative & Configuration -->
+      <div class="w-full lg:w-1/2 space-y-10 lg:sticky lg:top-32 h-fit text-left">
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <span class="text-[10px] font-black text-primary uppercase tracking-[0.4em]">{{ product().category?.name || 'Sản phẩm' }}</span>
+            <div class="h-px w-12 bg-border-subtle"></div>
+            <span class="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">{{ product().brand?.name || 'The Muse' }}</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-text-main leading-none uppercase tracking-tighter italic">
+            {{ product().name }}
+          </h1>
+          
+          <div class="flex items-center gap-6">
+            <div class="flex items-center gap-1.5 text-primary">
+              <i class="fa-solid fa-star text-[10px]"></i>
+              <span class="text-[10px] font-black uppercase tracking-widest text-text-main">{{ product().averageRating || '0.0' }}</span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1">({{ product().reviewCount || 0 }} Đánh giá)</span>
+            </div>
+            <div class="h-4 w-px bg-border-subtle"></div>
+            <span class="text-[10px] font-black uppercase tracking-widest" [class.text-green-500]="(currentVariant()?.stock || 0) > 0" [class.text-accent]="(currentVariant()?.stock || 0) <= 0">
+              {{ (currentVariant()?.stock || 0) > 0 ? 'Trong kho' : 'Hết hàng' }}
+            </span>
           </div>
         </div>
 
-        <button class="btn-add-to-cart" (click)="addToCart()">
-          <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
-        </button>
+        <div class="p-10 bg-bg-surface rounded-radius-lg border border-border-subtle space-y-2 relative overflow-hidden shadow-shadow-md">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+          <span class="text-text-muted text-[10px] font-black uppercase tracking-widest block italic">Giá trị đầu tư</span>
+          <span class="text-5xl font-black text-text-main tracking-tighter leading-none italic">
+            {{ (product().price + (currentVariant()?.additionalPrice || 0)) | number:'1.0-0' }}₫
+          </span>
+        </div>
+
+        <!-- Configuration Protocols -->
+        <div class="space-y-10">
+          <div class="space-y-4">
+            <h3 class="text-[11px] font-black uppercase tracking-widest text-text-main">Phân loại kích cỡ</h3>
+            <div class="flex flex-wrap gap-2">
+              @for (size of availableSizes(); track size) {
+                <button (click)="selectSize(size)" 
+                        [class.bg-text-main]="selectedSize() === size" 
+                        [class.text-text-inverse]="selectedSize() === size" 
+                        class="min-w-[80px] h-14 border border-border-strong rounded-radius-sm flex items-center justify-center text-[12px] font-black uppercase tracking-widest transition-all hover:border-text-main active:scale-95 text-text-main">
+                  {{ size }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <h3 class="text-[11px] font-black uppercase tracking-widest text-text-main">Lựa chọn sắc thái</h3>
+            <div class="flex flex-wrap gap-4">
+              @for (color of availableColors(); track color) {
+                <button (click)="selectColor(color)" 
+                        [style.background-color]="color" 
+                        [class.ring-2]="selectedColor() === color" 
+                        [class.ring-primary]="selectedColor() === color" 
+                        [class.ring-offset-4]="selectedColor() === color"
+                        class="w-8 h-8 rounded-full border border-black/10 transition-all hover:scale-110 shadow-sm"></button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribution Hooks -->
+        <div class="pt-10 space-y-6">
+          <div class="flex gap-4">
+            <div class="flex items-center bg-bg-surface rounded-radius-full border border-border-subtle p-1 w-36 shadow-inner">
+              <button (click)="decreaseQuantity()" class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
+              <span class="flex-1 text-center font-black text-[12px] text-text-main">{{ quantity() }}</span>
+              <button (click)="increaseQuantity()" class="w-10 h-10 flex items-center justify-center text-text-main hover:text-primary transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+            </div>
+
+            <button (click)="addToCart()" 
+                    [disabled]="addingToCart() || (currentVariant()?.stock || 0) === 0" 
+                    class="flex-1 bg-text-main text-text-inverse h-14 rounded-radius-full font-black uppercase text-[11px] tracking-[0.3em] flex items-center justify-center gap-4 transition-all hover:bg-primary active:scale-95 disabled:opacity-30 shadow-shadow-lg italic">
+              @if (addingToCart()) { <i class="fa-solid fa-circle-notch animate-spin"></i> }
+              <span>Tiếp nhận vào giỏ hàng</span>
+            </button>
+
+            <button (click)="toggleWishlist()" 
+                    [class.text-accent]="isInWishlist()" 
+                    class="w-14 h-14 border border-border-strong rounded-radius-full flex items-center justify-center transition-all active:scale-95 text-text-main hover:border-primary shadow-sm">
+              <i class="fa-solid fa-heart text-lg" [class.fa-regular]="!isInWishlist()"></i>
+            </button>
+          </div>
+
+          <div class="p-6 border border-border-subtle rounded-radius-md bg-bg-main/50 flex items-center gap-6">
+             <i class="fa-solid fa-truck-bolt text-lg text-primary opacity-50"></i>
+             <div class="space-y-1">
+                <p class="text-[9px] font-black uppercase tracking-widest text-text-main">Vận chuyển ưu tiên</p>
+                <p class="text-[8px] font-black text-text-muted uppercase tracking-[0.2em] italic">Dự kiến giao hàng trong 2-4 ngày làm việc</p>
+             </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+
+    <!-- Supplementary Context Bento -->
+    <div class="max-w-7xl mx-auto mt-32 space-y-16">
+      <div class="flex items-end justify-between border-b-2 border-border-strong pb-8 text-text-main">
+        <div class="space-y-4">
+          <h4 class="text-4xl font-black uppercase tracking-tighter italic">Hồi đáp & Đánh giá</h4>
+          <div class="flex items-center gap-6">
+            <span class="text-6xl font-black text-primary italic">{{ product().averageRating || '0.0' }}</span>
+            <div class="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted leading-tight">Chỉ số<br>uy tín Muse</div>
+          </div>
+        </div>
+        <button (click)="toggleReviewForm()" class="bg-text-main text-text-inverse px-10 h-14 rounded-radius-full text-[11px] font-black uppercase tracking-widest hover:bg-primary transition-all shadow-lg italic">
+          Đóng góp phản hồi
+        </button>
+      </div>
+
+      <!-- Add Review Form Section -->
+      @if (showReviewForm()) {
+        <div class="p-10 bg-[#fefee5] border-t border-b border-primary/20 space-y-6 animate-in slide-in-from-top-4 duration-500 rounded-md">
+          <div class="flex justify-between items-center">
+            <h4 class="text-xl font-bold text-primary italic uppercase tracking-tighter">Đánh giá chuẩn xác</h4>
+            <button (click)="showReviewForm.set(false)" class="text-text-muted hover:text-gray-900"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          
+          <div class="flex items-center gap-4">
+            <span class="text-sm font-medium text-text-main uppercase tracking-widest">Đánh giá của bạn:</span>
+            <div class="flex gap-2 text-2xl">
+              @for (star of [1,2,3,4,5]; track star) {
+                <button (click)="reviewRating.set(star)" class="transition-transform hover:scale-110">
+                  <i class="fa-solid fa-star" [class.text-yellow-400]="star <= reviewRating()" [class.text-gray-300]="star > reviewRating()"></i>
+                </button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <textarea [(ngModel)]="reviewComment" 
+                      placeholder="Hãy chia sẻ nhận xét chi tiết của bạn về sản phẩm này nhé..."
+                      class="w-full p-4 border border-border-subtle rounded-md text-sm focus:border-primary focus:ring-1 focus:ring-primary h-32 resize-none bg-white font-medium"></textarea>
+          </div>
+
+          <div class="flex justify-end">
+            <button (click)="submitRating()" 
+                    [disabled]="submittingReview() || reviewRating() === 0 || !reviewComment"
+                    class="bg-primary text-white px-8 py-3 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-gray-800 transition-colors disabled:opacity-50">
+              {{ submittingReview() ? 'Đang gửi...' : 'Hoàn tất đánh giá' }}
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (product().reviews && product().reviews.length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          @for (review of product().reviews; track review.id) {
+            <div class="p-10 bg-bg-surface rounded-radius-lg border border-border-subtle space-y-8 group hover:border-primary transition-all shadow-shadow-md text-text-main relative text-left">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 bg-bg-card rounded-radius-sm border border-border-subtle flex items-center justify-center font-black text-lg text-primary shadow-inner">
+                    {{ (review.user.fullName || review.user.username).charAt(0) }}
+                  </div>
+                  <div>
+                    <p class="text-[12px] font-black uppercase tracking-widest italic">{{ review.user.fullName || review.user.username }}</p>
+                    <div class="flex text-primary text-[9px] mt-1 gap-0.5">
+                      @for (star of [1,2,3,4,5]; track star) {
+                        <i class="fa-solid fa-star"></i>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <span class="text-[9px] font-black text-text-muted uppercase tracking-[0.3em] italic">{{ review.createdAt | date:'dd / MM / yyyy' }}</span>
+              </div>
+              <p class="text-[13px] text-text-main leading-relaxed font-bold italic border-l-2 border-primary pl-6">"{{ review.comment }}"</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="text-center py-32 bg-bg-surface rounded-radius-lg border-2 border-dashed border-border-strong animate-in fade-in duration-1000">
+          <div class="w-24 h-24 bg-bg-main rounded-radius-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <i class="fa-regular fa-comment-dots text-4xl text-border-strong opacity-20"></i>
+          </div>
+          <p class="text-[11px] font-black uppercase tracking-[0.4em] text-text-muted italic">Chưa có phản hồi nào cho thiết kế này.</p>
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- Loading Operational Protocol -->
+    <div class="min-h-[70vh] flex flex-col items-center justify-center space-y-8">
+      <div class="w-20 h-px bg-primary animate-pulse"></div>
+      <p class="text-[11px] font-black uppercase tracking-[0.5em] text-text-muted italic">Đang đồng bộ thông tin sản phẩm...</p>
+    </div>
+  }
 </div>

@@ -1,0 +1,175 @@
+<div class="min-h-screen bg-bg-main p-4 md:p-8 lg:p-12 animate-in fade-in duration-700">
+  <div class="max-w-5xl mx-auto space-y-12">
+    
+    <div class="space-y-2">
+      <h1 class="text-4xl md:text-5xl font-black text-text-main tracking-tighter uppercase leading-none">Thông tin tài khoản</h1>
+      <div class="flex items-center gap-4">
+        <span class="text-[10px] font-black text-primary uppercase tracking-[0.4em]">Quản lý định danh và bảo mật của bạn</span>
+        <div class="h-px w-20 bg-border-subtle"></div>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-12 items-start">
+      <!-- Sidebar Navigation -->
+      <aside class="w-full lg:w-72 space-y-3 sticky top-32">
+        <button 
+          (click)="activeTab.set('info')" 
+          [class.bg-text-main]="activeTab() === 'info'"
+          [class.text-text-inverse]="activeTab() === 'info'"
+          class="group w-full text-left px-8 py-5 rounded-radius-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-primary hover:text-text-inverse shadow-sm border border-border-subtle"
+          [ngClass]="activeTab() !== 'info' ? 'bg-bg-surface text-text-muted' : ''"
+        >
+          <i class="fa-regular fa-user mr-4 text-xs"></i> Hồ sơ cá nhân
+        </button>
+        <button 
+          (click)="activeTab.set('password')" 
+          [class.bg-text-main]="activeTab() === 'password'"
+          [class.text-text-inverse]="activeTab() === 'password'"
+          class="group w-full text-left px-8 py-5 rounded-radius-lg text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-primary hover:text-text-inverse shadow-sm border border-border-subtle"
+          [ngClass]="activeTab() !== 'password' ? 'bg-bg-surface text-text-muted' : ''"
+        >
+          <i class="fa-solid fa-shield-halved mr-4 text-xs"></i> Bảo mật tài khoản
+        </button>
+        <a 
+          routerLink="/orders" 
+          class="block w-full text-left px-8 py-5 rounded-radius-lg text-[10px] font-black uppercase tracking-[0.2em] bg-bg-surface text-text-muted transition-all hover:bg-primary hover:text-text-inverse shadow-sm border border-border-subtle"
+        >
+          <i class="fa-solid fa-box-archive mr-4 text-xs"></i> Đơn hàng của tôi
+        </a>
+        <a 
+          routerLink="/wishlist" 
+          class="block w-full text-left px-8 py-5 rounded-radius-lg text-[10px] font-black uppercase tracking-[0.2em] bg-bg-surface text-text-muted transition-all hover:bg-primary hover:text-text-inverse shadow-sm border border-border-subtle"
+        >
+          <i class="fa-regular fa-heart mr-4 text-xs"></i> Danh sách yêu thích
+        </a>
+      </aside>
+
+      <!-- Main Content Container -->
+      <div class="flex-grow w-full bg-bg-surface border border-border-subtle rounded-radius-lg p-10 shadow-shadow-lg animate-in fade-in slide-in-from-right-4 duration-700 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        
+        <!-- Tab: Basic Info -->
+        @if (activeTab() === 'info') {
+          <div class="space-y-10 relative z-10">
+            <div class="border-b border-border-subtle pb-6 text-left">
+                <h2 class="text-2xl font-black uppercase tracking-tighter text-text-main">Thông tin cơ bản</h2>
+                <p class="text-[9px] font-black text-text-muted uppercase tracking-widest mt-1">Cập nhật danh tính số của bạn trên hệ thống</p>
+            </div>
+            
+            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" class="space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="space-y-2">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Họ và tên đầy đủ</label>
+                  <input 
+                    type="text" 
+                    formControlName="fullName"
+                    class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-card transition-all text-sm font-bold text-text-main shadow-inner"
+                  >
+                </div>
+                <div class="space-y-2">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Số điện thoại</label>
+                  <input 
+                    type="text" 
+                    formControlName="phoneNumber"
+                    placeholder="Nhập số điện thoại"
+                    class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-card transition-all text-sm font-bold text-text-main shadow-inner"
+                  >
+                </div>
+                <div class="space-y-2 md:col-span-2">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Địa chỉ Email (Định danh tĩnh)</label>
+                  <input 
+                    type="email" 
+                    formControlName="email"
+                    class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 text-sm font-bold text-text-muted italic shadow-inner cursor-not-allowed"
+                    readonly
+                  >
+                </div>
+              </div>
+
+              @if (successMessage()) {
+                <div class="flex items-center gap-3 p-4 bg-green-500/10 border border-green-500/20 rounded-radius-sm">
+                    <i class="fa-solid fa-circle-check text-green-500"></i>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-green-600">{{ successMessage() }}</p>
+                </div>
+              }
+
+              <button 
+                type="submit" 
+                [disabled]="loading() || profileForm.invalid"
+                class="h-16 px-12 bg-text-main text-text-inverse rounded-radius-full text-[11px] font-black uppercase tracking-[0.3em] hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-30 shadow-shadow-md leading-none"
+              >
+                {{ loading() ? 'Đang cập nhật...' : 'Xác nhận đồng bộ hồ sơ' }}
+              </button>
+            </form>
+          </div>
+        }
+
+        <!-- Tab: Password -->
+        @if (activeTab() === 'password') {
+          <div class="space-y-10 relative z-10">
+            <div class="border-b border-border-subtle pb-6 text-left">
+                <h2 class="text-2xl font-black uppercase tracking-tighter text-text-main">Thay đổi bảo mật</h2>
+                <p class="text-[9px] font-black text-text-muted uppercase tracking-widest mt-1">Bảo vệ tài khoản bằng mã khóa mạnh mẽ</p>
+            </div>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="space-y-8">
+              <div class="space-y-8 text-left">
+                <div class="space-y-2">
+                  <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Mật khẩu hiện tại</label>
+                  <input 
+                    type="password" 
+                    formControlName="oldPassword"
+                    class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-card transition-all text-sm font-bold text-text-main shadow-inner"
+                  >
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Mật khẩu mới</label>
+                    <input 
+                      type="password" 
+                      formControlName="newPassword"
+                      class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-card transition-all text-sm font-bold text-text-main shadow-inner"
+                    >
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-text-muted ml-1 italic">Xác nhận mật khẩu mới</label>
+                    <input 
+                      type="password" 
+                      formControlName="confirmPassword"
+                      class="w-full bg-bg-main border border-border-strong rounded-radius-sm px-6 py-4 focus:border-primary focus:bg-bg-card transition-all text-sm font-bold text-text-main shadow-inner"
+                    >
+                    @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched) {
+                      <p class="text-[9px] font-black text-accent uppercase tracking-widest mt-2 ml-1 italic">Mã khóa xác nhận không trùng khớp</p>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              @if (successMessage()) {
+                <div class="flex items-center gap-3 p-4 bg-green-500/10 border border-green-500/20 rounded-radius-sm">
+                    <i class="fa-solid fa-circle-check text-green-500"></i>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-green-600">{{ successMessage() }}</p>
+                </div>
+              }
+              @if (errorMessage()) {
+                <div class="flex items-center gap-3 p-4 bg-accent/10 border border-accent/20 rounded-radius-sm">
+                    <i class="fa-solid fa-circle-exclamation text-accent"></i>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-accent">{{ errorMessage() }}</p>
+                </div>
+              }
+
+              <button 
+                type="submit" 
+                [disabled]="loading() || passwordForm.invalid"
+                class="h-16 px-12 bg-text-main text-text-inverse rounded-radius-full text-[11px] font-black uppercase tracking-[0.3em] hover:bg-primary transition-all active:scale-[0.98] disabled:opacity-30 shadow-shadow-md leading-none"
+              >
+                {{ loading() ? 'Đang mã hóa...' : 'Thiết lập mật khẩu mới' }}
+              </button>
+            </form>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>

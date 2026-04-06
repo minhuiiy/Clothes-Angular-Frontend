@@ -1,52 +1,142 @@
-<div class="home-wrapper">
-  <!-- Main Banner Segment -->
-  <section class="hero-segment">
-    <div class="container hero-content">
-      <div class="hero-text">
-        <h1 class="fade-in-up">THỜI TRANG MÁT MẺ<br><span class="light-text">DÀNH CHO NAM</span></h1>
-        <a routerLink="/products" class="btn btn-outline fade-in-up delay-1">CỬA HÀNG THỜI TRANG</a>
-      </div>
-      <!-- You would replace the src with the actual model image path inside assets -->
-      <div class="hero-image fade-in">
-        <!-- Mock placeholder simulating the image layout -->
-        <img
-          src="https://images.unsplash.com/photo-1516257984-b1b4d707412e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Male Model Fashion" />
-      </div>
+<div class="min-h-screen bg-bg-main">
+  
+  <!-- Hero Cinematic Narrative -->
+  <section class="relative h-[90vh] flex items-center overflow-hidden">
+    <div class="absolute inset-0 animate-in fade-in duration-1000">
+      <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2000" class="w-full h-full object-cover scale-105 grayscale group-hover:grayscale-0 transition-all duration-1000" alt="Hero Content">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
     </div>
-  </section>
-
-  <!-- Promotions / Collections Segment -->
-  <section class="promotions-segment container">
-    <div class="promo-card hover-lift">
-      <img
-        src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        alt="Men's Casuals" class="promo-bg">
-      <div class="promo-content">
-        <h2>THỜI TRANG NAM<br>THƯỜNG NGÀY</h2>
-        <p>CẨM NANG THỜI TRANG THÀNH THỊ DÀNH CHO QUÝ ÔNG</p>
-        <a routerLink="/category/nam" class="small-link">MUA NGAY ▸</a>
-      </div>
-    </div>
-
-    <div class="promo-card hover-lift discount-card">
-      <img
-        src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        alt="Fashion 40% Off" class="promo-bg">
-      <div class="promo-content right-align">
-        <h2 class="red-text">THỜI TRANG<br>KHÔNG DẪN ĐẦU;<br> NÓ THEO SAU</h2>
-        <div class="discount-badge">
-          <span class="number">40</span>
-          <span class="percent">% OFF<br>TRÊN ÁO SƠ MI CAO CẤP</span>
+    
+    <div class="container mx-auto px-6 relative z-10 text-left">
+      <div class="max-w-3xl space-y-10 animate-in slide-in-from-left-12 duration-1000">
+        <div class="flex items-center gap-4">
+          <span class="w-12 h-px bg-primary/60"></span>
+          <span class="text-primary text-[10px] font-black uppercase tracking-[0.5em] italic">TRENDYBOX COLLECTION 2024</span>
         </div>
-        <a routerLink="/products" class="small-link">MUA NGAY ▸</a>
+        <h1 class="text-7xl md:text-9xl font-black text-white leading-[0.85] tracking-tighter uppercase italic">
+          Bản sắc <br> <span class="text-primary">thời đại</span>
+        </h1>
+        <p class="text-[13px] text-gray-400 font-bold max-w-md leading-relaxed uppercase tracking-widest italic opacity-80">
+          Phá vỡ giới hạn giữa nghệ thuật đương đại và trang phục ứng dụng. Những thiết kế được tuyển chọn tỉ mỉ cho phong cách độc bản của bạn.
+        </p>
+        <div class="flex items-center gap-8 pt-6">
+          <a routerLink="/products" class="bg-primary text-white px-12 h-16 rounded-radius-full text-[11px] font-black uppercase tracking-[0.3em] flex items-center justify-center transition-all hover:bg-primary-hover hover:scale-105 active:scale-95 shadow-shadow-lg italic">
+            Khám phá Catalog
+          </a>
+          <button class="text-white text-[11px] font-black uppercase tracking-[0.3em] hover:text-primary transition-colors italic border-b border-white/20 pb-1">Xem Phim Ngắn</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+       <div class="w-px h-16 bg-gradient-to-b from-primary to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- Featured Bento Architecture -->
+  <section class="container mx-auto px-6 py-32 space-y-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b-2 border-border-strong pb-10 text-left">
+      <div class="space-y-4">
+        <h2 class="text-4xl font-black text-text-main uppercase tracking-tighter italic">Cơ cấu danh mục</h2>
+        <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.4em] italic">Định hình phong cách qua các lớp phân tầng</p>
+      </div>
+      <a routerLink="/products" class="group flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-all italic">
+        Toàn bộ bộ sưu tập
+        <i class="fa-solid fa-arrow-right-long group-hover:translate-x-3 transition-transform"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 h-[800px] md:h-[600px]">
+      <!-- Primary Focus: Nam -->
+      <div class="md:col-span-8 relative group overflow-hidden rounded-radius-lg shadow-shadow-md bg-bg-card">
+        <img src="https://images.unsplash.com/photo-1488161628813-24479bd66015?q=80&w=1200" 
+             class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0" 
+             alt="Men Fashion">
+        <div class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end h-1/2 text-left">
+          <span class="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-2 italic">Curated Series</span>
+          <h3 class="text-5xl font-black text-white uppercase tracking-tighter italic">Thời trang Nam</h3>
+          <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest mt-4 italic max-w-sm">Cấu trúc Brutalism kết hợp cùng sự tinh tế tối giản trong từng đường cắt.</p>
+          <a routerLink="/category/nam" class="mt-8 bg-white text-black w-fit px-8 h-12 rounded-radius-full flex items-center text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-lg active:scale-95 italic">
+            Truy cập phân vùng
+          </a>
+        </div>
+      </div>
+
+      <!-- Secondary Focus: Nữ -->
+      <div class="md:col-span-4 relative group overflow-hidden rounded-radius-lg shadow-shadow-md bg-bg-card">
+        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800" 
+             class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0" 
+             alt="Women Fashion">
+        <div class="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent text-left">
+          <h3 class="text-3xl font-black text-white uppercase tracking-tighter italic">Thời trang Nữ</h3>
+          <a routerLink="/category/nu" class="mt-4 text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-3 hover:gap-5 transition-all italic">
+            Mua ngay <i class="fa-solid fa-arrow-right-long text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Triptych Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+       <!-- Accessorries -->
+       <div class="group relative aspect-video md:aspect-auto md:h-72 overflow-hidden rounded-radius-lg shadow-shadow-md bg-bg-card border border-border-subtle">
+         <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800" 
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" 
+              alt="Accessories">
+         <div class="absolute inset-0 p-8 flex flex-col justify-center bg-white/5 backdrop-blur-[2px] group-hover:backdrop-blur-0 transition-all text-left">
+           <h4 class="text-2xl font-black text-white uppercase tracking-tighter italic">Phụ kiện<br>Editorial</h4>
+           <a routerLink="/category/phu-kien" class="mt-4 text-white text-[9px] font-black uppercase tracking-widest flex items-center gap-2 hover:text-primary transition-colors italic">Sưu tầm ngay <i class="fa-solid fa-arrow-right"></i></a>
+         </div>
+       </div>
+
+       <!-- Limited Promo -->
+       <div class="lg:col-span-2 bg-text-main p-10 flex flex-col md:flex-row items-center justify-between gap-8 rounded-radius-lg shadow-shadow-lg relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse"></div>
+          <div class="space-y-4 relative z-10 text-left">
+            <span class="text-primary text-[10px] font-black uppercase tracking-[0.4em] italic">Chương trình ưu đãi giới hạn</span>
+            <h3 class="text-4xl md:text-5xl font-black text-text-inverse uppercase tracking-tighter italic">Flash Sale 50% <span class="bg-primary text-[12px] px-3 py-1 rounded-sm ml-4 align-middle">MUSE-PROMO</span></h3>
+            <p class="text-[11px] text-text-inverse/40 font-bold uppercase tracking-widest italic">Áp dụng cho các sản phẩm trong danh mục tuyển chọn</p>
+          </div>
+          <button routerLink="/sale" class="relative z-10 w-24 h-24 rounded-radius-full bg-primary text-text-inverse flex items-center justify-center hover:scale-110 transition-transform shadow-shadow-lg group-hover:rotate-12">
+             <i class="fa-solid fa-percent text-3xl"></i>
+          </button>
+       </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us Protocol -->
+  <section class="bg-bg-surface border-y border-border-subtle py-20">
+    <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div class="flex flex-col items-center justify-center text-center space-y-4 group">
+        <div class="w-16 h-16 bg-bg-main rounded-radius-md flex items-center justify-center text-primary shadow-inner border border-transparent group-hover:border-primary/20 transition-all">
+          <i class="fa-solid fa-truck-fast text-2xl"></i>
+        </div>
+        <h6 class="text-[11px] font-black uppercase tracking-widest text-text-main italic">Phân phối 2h</h6>
+        <p class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] italic">Tại nội thành Hà Nội & HCM</p>
+      </div>
+      <div class="flex flex-col items-center justify-center text-center space-y-4 group">
+        <div class="w-16 h-16 bg-bg-main rounded-radius-md flex items-center justify-center text-primary shadow-inner border border-transparent group-hover:border-primary/20 transition-all">
+          <i class="fa-solid fa-rotate-left text-2xl"></i>
+        </div>
+        <h6 class="text-[11px] font-black uppercase tracking-widest text-text-main italic">Đổi trả 30 ngày</h6>
+        <p class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] italic">Miễn phí mọi thủ tục hoàn trả</p>
+      </div>
+      <div class="flex flex-col items-center justify-center text-center space-y-4 group">
+        <div class="w-16 h-16 bg-bg-main rounded-radius-md flex items-center justify-center text-primary shadow-inner border border-transparent group-hover:border-primary/20 transition-all">
+          <i class="fa-solid fa-shield-halved text-2xl"></i>
+        </div>
+        <h6 class="text-[11px] font-black uppercase tracking-widest text-text-main italic">Bảo hành trọn đời</h6>
+        <p class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] italic">Về cấu trúc & đường may tuyển chọn</p>
+      </div>
+      <div class="flex flex-col items-center justify-center text-center space-y-4 group">
+        <div class="w-16 h-16 bg-bg-main rounded-radius-md flex items-center justify-center text-primary shadow-inner border border-transparent group-hover:border-primary/20 transition-all">
+          <i class="fa-solid fa-headset text-2xl"></i>
+        </div>
+        <h6 class="text-[11px] font-black uppercase tracking-widest text-text-main italic">Hỗ trợ cao cấp</h6>
+        <p class="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] italic">Đội ngũ chuyên viên 24/7</p>
       </div>
     </div>
   </section>
 
-  <!-- Title section for Product Grid -->
-  <section class="category-segment text-center">
-    <h3>Danh mục sản phẩm</h3>
-    <div class="divider"></div>
-  </section>
 </div>

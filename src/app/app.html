@@ -1,6 +1,51 @@
-<app-navbar></app-navbar>
-<app-breadcrumb></app-breadcrumb>
-<main class="main-content">
-  <!-- Nơi nội dung của các trang như Home, Products được render -->
-  <router-outlet></router-outlet>
-</main>
+<div class="min-h-screen bg-white flex flex-col">
+  <!-- Top Navigation -->
+  @if (!isAdminRoute()) {
+    <app-navbar></app-navbar>
+  
+    <!-- Breadcrumb -->
+    <div class="bg-gray-50/50">
+      <app-breadcrumb></app-breadcrumb>
+    </div>
+  }
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <main class="min-h-screen relative" [@routeAnimations]="prepareRoute()">
+      <router-outlet></router-outlet>
+    </main>
+  </main>
+
+  <!-- Footer Section -->
+  @if (!isAdminRoute()) {
+    <footer class="bg-surface-container-low dark:bg-stone-900 py-16 w-full border-t border-outline-variant/10">
+      <div class="max-w-[1600px] mx-auto px-12 flex flex-col items-center gap-10">
+        <!-- Logo -->
+        <div class="font-headline text-2xl font-bold tracking-[0.3em] text-on-surface uppercase">
+          TRENDYBOX
+        </div>
+
+        <!-- Links -->
+        <div class="flex flex-wrap justify-center gap-12">
+          <a routerLink="/privacy"
+            class="font-label text-[10px] tracking-[0.2em] font-bold uppercase text-on-surface/60 hover:text-on-surface transition-colors">Bảo
+            mật</a>
+          <a routerLink="/terms"
+            class="font-label text-[10px] tracking-[0.2em] font-bold uppercase text-on-surface/60 hover:text-on-surface transition-colors">Điều
+            khoản</a>
+          <a routerLink="/shipping"
+            class="font-label text-[10px] tracking-[0.2em] font-bold uppercase text-on-surface/60 hover:text-on-surface transition-colors">Giao
+            hàng</a>
+          <a routerLink="/stores"
+            class="font-label text-[10px] tracking-[0.2em] font-bold uppercase text-on-surface/60 hover:text-on-surface transition-colors">Cửa
+            hàng</a>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-[9px] tracking-[0.3em] font-bold uppercase text-on-surface/40 text-center">
+          © 2026 TRENDYBOX. ARCHITECTURAL PRECISION IN TEXTILE.
+        </div>
+      </div>
+    </footer>
+  }
+</div>

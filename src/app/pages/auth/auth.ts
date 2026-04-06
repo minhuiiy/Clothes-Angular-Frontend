@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
@@ -9,70 +9,78 @@ import { Router, ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './auth.html',
-  styleUrl: './auth.css'
 })
 export class AuthComponent implements OnInit {
-  isLoginMode = true;
-  formData: any = {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  // State using Signals
+  isLoginMode = signal(true);
+  loading = signal(false);
+  errorMessage = signal('');
+  successMessage = signal('');
+  
+  formData = {
     username: '',
     password: '',
     email: '',
     fullName: ''
   };
-  errorMessage = '';
-  successMessage = '';
-
-  constructor(
-    private authService: AuthService, 
-    private router: Router,
-    private route: ActivatedRoute
-  ) { }
 
   ngOnInit(): void {
-    // Nếu URL là /auth/register thì chuyển mode
-    if (this.router.url === '/auth/register') {
-      this.isLoginMode = false;
+    if (this.router.url.includes('/auth/register')) {
+      this.isLoginMode.set(false);
     }
     
-    // Nếu User đã login thì không cho vào đây
     if (this.authService.getCurrentUser()) {
       this.router.navigate(['/']);
     }
   }
 
   switchMode(isLogin: boolean) {
-    this.isLoginMode = isLogin;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.isLoginMode.set(isLogin);
+    this.errorMessage.set('');
+    this.successMessage.set('');
     const targetUrl = isLogin ? '/auth/login' : '/auth/register';
     this.router.navigate([targetUrl]);
   }
 
   onSubmit() {
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage.set('');
+    this.successMessage.set('');
+    this.loading.set(true);
 
-    if (this.isLoginMode) {
+    if (this.isLoginMode()) {
       this.authService.login({ username: this.formData.username, password: this.formData.password }).subscribe({
-        next: (res) => {
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigate([returnUrl]);
+        next: (response: any) => {
+          const roles = response.roles || [];
+          if (roles.includes('ROLE_ADMIN')) {
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            this.router.navigate([returnUrl]);
+          }
+          this.loading.set(false);
         },
-        error: (err) => {
-          this.errorMessage = 'Sai tên đăng nhập hoặc mật khẩu!';
+        error: () => {
+          this.errorMessage.set('Sai tên đăng nhập hoặc mật khẩu!');
+          this.loading.set(false);
         }
       });
     } else {
       this.authService.register(this.formData).subscribe({
-        next: (res) => {
-          this.successMessage = 'Đăng ký thành công! Đang chuyển sang màn đăng nhập...';
+        next: () => {
+          this.successMessage.set('Đăng ký thành công! Đang chuyển sang màn đăng nhập...');
+          this.loading.set(false);
           setTimeout(() => {
             this.switchMode(true);
             this.formData.password = '';
           }, 1500);
         },
         error: (err) => {
-          this.errorMessage = err.error?.message || 'Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại.';
+          this.errorMessage.set(err.error?.message || 'Đăng ký thất bại. Tên đăng nhập có thể đã tồn tại.');
+          this.loading.set(false);
         }
       });
     }

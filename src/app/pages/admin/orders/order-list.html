@@ -1,0 +1,93 @@
+<div class="space-y-12 animate-in fade-in duration-1000">
+  
+  <!-- Header: Order Command Center -->
+  <header class="flex flex-col md:flex-row justify-between items-end gap-8 pb-10 border-b border-border-subtle">
+    <div class="space-y-4 text-left">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-px bg-primary/40"></div>
+        <p class="text-primary text-[10px] font-black uppercase tracking-[0.5em] italic">Quản lý giao dịch hệ thống</p>
+      </div>
+      <h1 class="text-5xl font-black text-text-main tracking-tighter uppercase italic leading-none">Vận đơn <span class="text-primary">tổng thể</span></h1>
+      <p class="text-[10px] text-text-muted font-black uppercase tracking-[0.3em] italic">Theo dõi {{ orders.length }} hoạt động giao thương gần đây</p>
+    </div>
+    
+    <div class="flex gap-4">
+        <button (click)="loadOrders()" class="w-14 h-14 bg-bg-surface border border-border-subtle rounded-radius-full flex items-center justify-center text-text-muted hover:text-primary hover:border-primary transition-all shadow-sm active:scale-95 group">
+          <i class="fa-solid fa-rotate text-lg group-hover:rotate-180 transition-transform duration-700"></i>
+        </button>
+        <button class="px-10 h-14 bg-text-main text-text-inverse rounded-radius-full text-[10px] font-black uppercase tracking-[0.3em] hover:bg-primary transition-all shadow-shadow-md italic active:scale-95">Trích xuất báo cáo</button>
+    </div>
+  </header>
+
+  <!-- Loading State Protocol -->
+  <div *ngIf="loading()" class="py-40 flex flex-col items-center justify-center gap-8">
+      <div class="w-20 h-px bg-primary animate-pulse"></div>
+      <p class="text-[10px] font-black text-text-muted uppercase tracking-[0.5em] italic">Đang đồng bộ sổ lệnh giao dịch...</p>
+  </div>
+
+  <!-- Order Table (Editorial Grid System) -->
+  <div class="bg-bg-surface border border-border-subtle rounded-radius-lg overflow-hidden shadow-shadow-sm" *ngIf="!loading()">
+    <div class="overflow-x-auto custom-scrollbar">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-bg-main/50 text-[9px] font-black uppercase tracking-[0.4em] text-text-muted border-b border-border-subtle">
+            <th class="py-8 px-10">Mã vận đơn / Thời gian</th>
+            <th class="py-8 px-10">Chủ thể khách hàng</th>
+            <th class="py-8 px-10">Giá trị quyết toán</th>
+            <th class="py-8 px-10">Trạng thái vận hành</th>
+            <th class="py-8 px-10 text-right">Hành động</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border-subtle">
+          <tr *ngFor="let order of orders" class="group hover:bg-bg-main/30 transition-all duration-300">
+            <!-- Order ID & Date -->
+            <td class="py-8 px-10">
+              <div class="space-y-1.5">
+                <span class="text-[12px] font-black text-text-main uppercase tracking-widest italic group-hover:text-primary transition-colors">#ORD-{{ order.id }}</span>
+                <div class="flex items-center gap-2 opacity-60">
+                   <i class="fa-regular fa-clock text-[8px]"></i>
+                   <p class="text-[9px] font-black text-text-muted uppercase tracking-widest italic">{{ order.createdAt | date:'HH:mm · dd / MM' }}</p>
+                </div>
+              </div>
+            </td>
+            <!-- Customer Narrative -->
+            <td class="py-8 px-10">
+              <div class="space-y-1">
+                <p class="text-[12px] font-black text-text-main uppercase tracking-tighter italic">{{ order.fullName }}</p>
+                <p class="text-[9px] font-black text-text-muted tracking-widest italic opacity-70">{{ order.phoneNumber }}</p>
+              </div>
+            </td>
+            <!-- Financial Value -->
+            <td class="py-8 px-10">
+              <span class="text-xl font-black text-text-main tracking-tighter italic group-hover:scale-105 transition-transform inline-block">{{ order.totalAmount | number:'1.0-0' }}₫</span>
+            </td>
+            <!-- Operational Control -->
+            <td class="py-8 px-10">
+              <div class="relative w-max group/select">
+                 <select [ngModel]="order.status" (ngModelChange)="updateStatus(order.id, $event)"
+                         [class]="'pl-6 pr-12 py-2.5 rounded-radius-full text-[9px] font-black uppercase tracking-widest cursor-pointer appearance-none border transition-all ' + getStatusClass(order.status)">
+                   <option *ngFor="let s of orderStatuses" [value]="s">{{ getStatusLabel(s) }}</option>
+                 </select>
+                 <i class="fa-solid fa-chevron-down text-[8px] absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover/select:translate-y-0.5 transition-transform"></i>
+              </div>
+            </td>
+            <!-- Executive Actions -->
+            <td class="py-8 px-10 text-right">
+              <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                 <a [routerLink]="['/admin/orders', order.id]" 
+                    class="w-12 h-12 flex items-center justify-center bg-bg-main border border-border-subtle rounded-radius-md text-text-muted hover:text-primary hover:border-primary transition-all shadow-sm">
+                    <i class="fa-solid fa-eye text-sm"></i>
+                 </a>
+                 <button (click)="deleteOrder(order.id)" 
+                         class="w-12 h-12 flex items-center justify-center bg-bg-main border border-border-subtle rounded-radius-md text-text-muted hover:text-accent hover:border-accent transition-all shadow-sm">
+                    <i class="fa-solid fa-trash-can text-sm"></i>
+                 </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -22,7 +22,29 @@ export class ProductService {
     return this.http.get(API_URL, { params });
   }
 
+  getProductsWithFilters(filterParams: any): Observable<any> {
+    let params = new HttpParams();
+    Object.keys(filterParams).forEach(key => {
+      if (filterParams[key] != null) {
+        params = params.set(key, filterParams[key].toString());
+      }
+    });
+    return this.http.get(API_URL, { params });
+  }
+
   getProductById(id: number): Observable<any> {
     return this.http.get(`${API_URL}/${id}`);
+  }
+
+  createProduct(product: any): Observable<any> {
+    return this.http.post(API_URL, product);
+  }
+
+  updateProduct(id: number, product: any): Observable<any> {
+    return this.http.put(`${API_URL}/${id}`, product);
+  }
+
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete(`${API_URL}/${id}`);
   }
 }

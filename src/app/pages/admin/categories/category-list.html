@@ -1,0 +1,123 @@
+<div class="space-y-12 animate-in fade-in duration-1000">
+  
+  <!-- Header: Taxonomy Management -->
+  <header class="flex flex-col md:flex-row justify-between items-end gap-8 pb-10 border-b border-outline-variant/10">
+    <div class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="w-12 h-px bg-primary/40"></span>
+        <p class="font-label text-[10px] tracking-[0.4em] text-primary uppercase font-bold">Hệ thống phân loại</p>
+      </div>
+      <h1 class="font-headline text-5xl font-bold tracking-tighter uppercase text-on-surface">Quản lý danh mục</h1>
+      <p class="font-body text-xs text-outline uppercase tracking-widest italic">Cấu trúc hóa bộ sưu tập nghệ thuật của bạn</p>
+    </div>
+    
+    <button (click)="openAddModal()" 
+            class="px-8 py-4 bg-on-surface text-surface font-label text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-primary-dim transition-all shadow-editorial flex items-center gap-3">
+      <span class="material-symbols-outlined text-sm">add</span>
+      Thêm danh mục
+    </button>
+  </header>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="py-32 flex flex-col items-center justify-center gap-6">
+     <div class="w-16 h-px bg-on-surface/20 animate-pulse"></div>
+     <p class="font-label text-[10px] tracking-[0.3em] uppercase text-outline">Đang tải cấu trúc dữ liệu...</p>
+  </div>
+
+  <!-- Categories Grid (The Editorial Bento) -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" *ngIf="!loading">
+    <div *ngFor="let cat of categories" 
+         class="group bg-surface border border-outline-variant/10 p-8 space-y-8 hover:bg-surface-container-low transition-all duration-500 relative overflow-hidden">
+      
+      <!-- Background Asset (Subtle) -->
+      <div *ngIf="cat.imageUrl" class="absolute right-0 top-0 w-32 h-32 opacity-5 grayscale group-hover:scale-110 transition-transform duration-700 pointer-events-none">
+         <img [src]="cat.imageUrl" alt="Texture" class="w-full h-full object-cover">
+      </div>
+
+      <div class="space-y-4 relative z-10">
+        <div class="flex justify-between items-start">
+           <span class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold italic">Danh mục #{{ cat.id }}</span>
+           <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button (click)="openEditModal(cat)" class="material-symbols-outlined text-sm text-outline hover:text-on-surface transition-colors">edit</button>
+              <button (click)="deleteCategory(cat.id)" class="material-symbols-outlined text-sm text-outline hover:text-error transition-colors">delete</button>
+           </div>
+        </div>
+        <h3 class="font-headline text-2xl font-bold uppercase tracking-tight text-on-surface group-hover:text-primary transition-colors">{{ cat.name }}</h3>
+        <p class="font-label text-[10px] text-outline uppercase tracking-widest font-bold">Slug: {{ cat.slug || 'N/A' }}</p>
+      </div>
+
+      <div class="pt-6 border-t border-outline-variant/10 flex justify-between items-center relative z-10">
+         <span class="font-body text-[10px] text-outline uppercase tracking-widest italic">Phân hệ: {{ cat.parent_id ? 'Danh mục con' : 'Danh mục chính' }}</span>
+         <span class="material-symbols-outlined text-xl text-outline/20 group-hover:translate-x-2 transition-transform">east</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: The Muse Design (Brutalist Form) -->
+  <div *ngIf="showModal" class="fixed inset-0 z-[110] flex items-center justify-center p-6">
+    <div class="absolute inset-0 bg-bg-surface/80 backdrop-blur-sm" (click)="closeModal()"></div>
+    
+    <div class="w-full max-w-lg bg-bg-main relative z-10 editorial-shadow animate-in zoom-in-95 duration-500 overflow-hidden border border-border-subtle shadow-shadow-lg">
+      <header class="bg-text-main text-text-inverse p-8">
+         <h2 class="font-headline text-2xl font-bold uppercase tracking-tighter italic">
+           {{ editingCategory ? 'Cập nhật danh mục' : 'Thêm danh mục mới' }}
+         </h2>
+         <p class="font-label text-[9px] tracking-[0.4em] uppercase font-bold opacity-60">Quy trình phân loại hệ thống</p>
+      </header>
+
+      <form (submit)="saveCategory()" class="p-10 space-y-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+          <!-- Name -->
+          <div class="space-y-3">
+            <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="catName">Tên danh mục *</label>
+            <input [(ngModel)]="categoryForm.name" name="name" id="catName" type="text" required
+                   class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-sm font-bold uppercase p-0 pb-2 transition-colors placeholder:text-outline-variant/30">
+          </div>
+          <!-- Slug -->
+          <div class="space-y-3">
+            <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="catSlug">Đường dẫn (Slug)</label>
+            <input [(ngModel)]="categoryForm.slug" name="slug" id="catSlug" type="text"
+                   class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-[10px] font-bold uppercase p-0 pb-2 transition-colors">
+          </div>
+        </div>
+
+        <!-- Parent Category Selection -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold">Cấp bậc hệ thống</label>
+          <select [(ngModel)]="categoryForm.parent_id" name="parent_id"
+                  class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-[10px] font-bold uppercase tracking-widest p-0 pb-3 cursor-pointer">
+            <option [ngValue]="null">--- LÀ DANH MỤC CHÍNH ---</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id" [hidden]="cat.id === editingCategory?.id">{{ cat.name }}</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="catDesc">Tuyên ngôn danh mục</label>
+          <textarea [(ngModel)]="categoryForm.description" name="description" id="catDesc" rows="4"
+                    class="w-full bg-surface-container-low border border-outline-variant/10 focus:border-on-surface focus:ring-0 text-[10px] p-5 transition-all resize-none font-bold uppercase tracking-[0.1em] leading-relaxed placeholder:text-outline-variant/30"
+                    placeholder="MÔ TẢ NGẮN GỌN VỀ PHONG CÁCH VÀ ĐỊNH HƯỚNG CỦA DANH MỤC NÀY..."></textarea>
+        </div>
+
+        <!-- Image URL -->
+        <div class="space-y-3">
+          <label class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold" for="catImg">Tư liệu hình ảnh (URL)</label>
+          <input [(ngModel)]="categoryForm.imageUrl" name="imageUrl" id="catImg" type="text"
+                 class="w-full bg-transparent border-0 border-b border-outline/30 focus:border-on-surface focus:ring-0 text-[9px] p-0 pb-2 transition-colors underline decoration-dotted decoration-outline/20">
+        </div>
+
+        <div class="flex gap-4 pt-10">
+           <button type="button" (click)="closeModal()" 
+                   class="flex-1 py-5 border border-border-strong font-label text-[10px] font-bold uppercase tracking-widest hover:bg-white transition-all italic text-text-main hover:text-primary">
+             Hủy bỏ
+           </button>
+           <button type="submit" 
+                   class="flex-1 py-5 bg-text-main text-text-inverse font-label text-[10px] font-bold uppercase tracking-widest hover:bg-primary transition-all shadow-editorial-lg italic">
+             Xác nhận lưu
+           </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

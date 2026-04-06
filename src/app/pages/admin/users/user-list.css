@@ -1,0 +1,46 @@
+:host {
+    display: block;
+}
+
+.shadow-editorial {
+    box-shadow: 6px 6px 0px rgba(54, 59, 18, 0.1);
+}
+
+.group:hover .shadow-editorial {
+    box-shadow: 8px 8px 0px rgba(54, 59, 18, 0.2);
+}
+
+/* Brutalist Table Styling */
+table th {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    padding: 2.5rem 2rem;
+    text-align: left;
+}
+
+table td {
+    border-bottom: 1px solid rgba(54, 59, 18, 0.05);
+}
+
+/* Custom Scrollbar for the table */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Animations from styles.css are used, but we can add micro-interactions here */
+.group {
+    cursor: default;
+}
+
+button {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button:hover i {
+    transform: scale(1.2);
+}

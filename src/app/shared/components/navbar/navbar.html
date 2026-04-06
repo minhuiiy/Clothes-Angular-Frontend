@@ -1,54 +1,222 @@
-<nav class="navbar glass">
-  <div class="container nav-content">
-    <div class="logo">
-      <a routerLink="/">TrendyBox</a>
+<!-- Main Header -->
+<header 
+  class="sticky top-0 z-50 w-full transition-all duration-500 border-b border-transparent bg-bg-main/95 backdrop-blur-md"
+  [class.shadow-sm]="isScrolled()"
+  [class.border-border-subtle]="isScrolled()"
+>
+  <!-- Top Utilities (Desktop Only) -->
+  <div class="border-b border-border-subtle hidden lg:block transition-all duration-300" 
+       [class.h-0]="isScrolled()" [class.opacity-0]="isScrolled()" [class.overflow-hidden]="isScrolled()">
+    <div class="container mx-auto px-6 h-9 flex items-center justify-between text-[10px] font-black text-text-muted uppercase tracking-widest">
+      <div class="flex items-center gap-8">
+        <span class="flex items-center gap-2"><i class="fa-solid fa-location-dot"></i> HỆ THỐNG CỬA HÀNG</span>
+        <span class="flex items-center gap-2"><i class="fa-solid fa-phone"></i> HOTLINE: 1900 6789</span>
+      </div>
+      <div class="flex items-center gap-8">
+        @if (currentUser()?.roles?.includes('ROLE_ADMIN') || currentUser()?.roles?.includes('ROLE_STAFF')) {
+          <a routerLink="/admin/dashboard" class="text-primary hover:opacity-80 flex items-center gap-2 font-black italic">
+            <i class="fa-solid fa-user-shield"></i> DASHBOARD QUẢN TRỊ
+          </a>
+          <span class="w-px h-3 bg-border-strong"></span>
+        }
+        <span class="hover:text-text-main transition-colors cursor-pointer italic">THEO DÕI ĐƠN HÀNG</span>
+        <span class="flex items-center gap-1.5 cursor-pointer">VN <img src="https://flagcdn.com/w20/vn.png" class="w-3.5 h-2.5 object-cover rounded-sm shadow-sm" alt="VN"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="container mx-auto px-6 flex items-center justify-between h-16 md:h-20 transition-all duration-300" [class.h-14]="isScrolled()">
+    
+    <!-- Left: Navigation Links -->
+    <div class="flex items-center gap-12 flex-1">
+      <button (click)="toggleMobileMenu()" class="lg:hidden text-text-main text-xl hover:text-primary transition-colors">
+        <i class="fa-solid" [class.fa-bars-staggered]="!isMobileMenuOpen()" [class.fa-xmark]="isMobileMenuOpen()"></i>
+      </button>
+
+      <ul class="hidden lg:flex items-center gap-10">
+        <li>
+          <a routerLink="/category/nam" routerLinkActive="text-primary decoration-primary" 
+             class="text-[12px] font-black uppercase tracking-[0.2em] text-text-main hover:text-primary transition-all underline underline-offset-[12px] decoration-transparent">
+            Nam
+          </a>
+        </li>
+        <li>
+          <a routerLink="/category/nu" routerLinkActive="text-primary decoration-primary" 
+             class="text-[12px] font-black uppercase tracking-[0.2em] text-text-main hover:text-primary transition-all underline underline-offset-[12px] decoration-transparent">
+            Nữ
+          </a>
+        </li>
+        <li>
+          <a routerLink="/products" routerLinkActive="text-primary decoration-primary"
+             class="text-[12px] font-black uppercase tracking-[0.2em] text-text-main hover:text-primary transition-all underline underline-offset-[12px] decoration-transparent">
+            Bộ sưu tập
+          </a>
+        </li>
+        <li>
+          <a routerLink="/category/phu-kien" routerLinkActive="text-primary decoration-primary"
+             class="text-[12px] font-black uppercase tracking-[0.2em] text-text-main hover:text-primary transition-all underline underline-offset-[12px] decoration-transparent">
+            Phụ kiện
+          </a>
+        </li>
+      </ul>
     </div>
 
-    <ul class="nav-links">
-      <li><a routerLink="/products" routerLinkActive="active">Sản phẩm mới <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nam" routerLinkActive="active">Nam <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/nu" routerLinkActive="active">Nữ <span class="caret">▼</span></a></li>
-      <li><a routerLink="/category/phu-kien" routerLinkActive="active">Phụ kiện <span class="caret">▼</span></a></li>
-      <li><a routerLink="/brands" routerLinkActive="active">Thương hiệu <span class="caret">▼</span></a></li>
-    </ul>
+    <!-- Center: Logo Identity -->
+    <div class="flex-shrink-0 flex justify-center">
+      <a routerLink="/" class="flex flex-col items-center group">
+        <span class="text-2xl md:text-3xl font-black tracking-[0.25em] uppercase text-text-main group-hover:text-primary transition-colors leading-none">TRENDYBOX</span>
+        <span class="text-[7px] font-black tracking-[0.6em] uppercase text-text-muted mt-1 group-hover:text-text-main transition-colors text-center italic">HIGH-FIDELITY FASHION</span>
+      </a>
+    </div>
 
-    <div class="nav-icons">
-      <a href="#"><span title="Location"><i class="fa-solid fa-location-dot"></i></span></a>
-      <div class="search-container">
-        <a href="javascript:void(0)" (click)="toggleSearch()"><span title="Search"><i
-              class="fa-solid fa-magnifying-glass"></i></span></a>
+    <!-- Right: Functional Actions -->
+    <div class="flex items-center justify-end gap-3 md:gap-8 flex-1">
+      
+      <!-- Search Input (The Editorial Style) -->
+      <div class="hidden lg:flex items-center group relative h-10 border-b border-border-subtle focus-within:border-primary transition-all">
+        <i class="fa-solid fa-magnifying-glass text-text-muted text-xs group-focus-within:text-primary"></i>
+        <input 
+          id="searchInput"
+          type="text" 
+          placeholder="TÌM KIẾM..." 
+          class="bg-transparent border-none focus:ring-0 text-[10px] font-black tracking-widest w-24 focus:w-48 transition-all px-3 text-text-main placeholder:text-text-muted/40"
+          (input)="onSearchInput($event)"
+          (keyup.enter)="doSearch($event)"
+        >
+        
+        <!-- Search Results Panel -->
+        @if (quickSearchResults().length > 0) {
+          <div class="absolute top-full right-0 mt-4 w-80 bg-bg-surface border border-border-subtle shadow-shadow-lg p-4 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+             <div class="flex justify-between items-center mb-4 pb-2 border-b border-border-subtle">
+                <span class="text-[9px] font-black uppercase tracking-widest text-text-muted">Kết quả nhanh</span>
+                <button (click)="quickSearchResults.set([])" class="text-text-muted hover:text-text-main"><i class="fa-solid fa-xmark text-xs"></i></button>
+             </div>
+             <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                @for (product of quickSearchResults(); track product.id) {
+                   <a [routerLink]="['/products', product.id]" (click)="quickSearchResults.set([])" 
+                      class="flex items-center gap-4 group/item hover:bg-bg-main p-2 transition-colors">
+                       <img [src]="product.imageUrl || 'assets/placeholder.png'" class="w-12 h-16 object-cover grayscale group-hover/item:grayscale-0 transition-all">
+                       <div class="flex flex-col text-left">
+                          <span class="text-[10px] font-black uppercase tracking-tight text-text-main group-hover/item:text-primary">{{ product.name }}</span>
+                          <span class="text-[11px] font-black italic mt-1">{{ product.price | number:'1.0-0' }}₫</span>
+                       </div>
+                    </a>
+                 }
+              </div>
+           </div>
+        }
+      </div>
 
-        <div class="search-dropdown" *ngIf="isSearchActive">
-          <div class="search-arrow"></div>
-          <div class="search-title">TÌM KIẾM</div>
-          <div class="search-input-wrapper">
-            <input type="text" placeholder="Tìm kiếm sản phẩm..." [(ngModel)]="searchKeyword" (keyup)="doSearch($event)"
-              autofocus>
-            <span class="search-submit-icon" (click)="doSearch({key: 'Enter'})"><i
-                class="fa-solid fa-magnifying-glass"></i></span>
-          </div>
+      <!-- Favorites -->
+      <a routerLink="/wishlist" class="relative group">
+        <i class="fa-regular fa-heart text-lg text-text-main group-hover:text-primary transition-all"></i>
+        <span *ngIf="wishlistCount() > 0" class="absolute -top-2 -right-2 w-4 h-4 bg-primary text-white text-[8px] font-black rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-sm">
+          {{ wishlistCount() }}
+        </span>
+      </a>
+
+      <!-- Shopping Cart -->
+      <a routerLink="/cart" class="relative group flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-lg text-text-main group-hover:text-primary transition-all"></i>
+        <span *ngIf="cartCount() > 0" class="absolute -top-2 -right-2 w-4 h-4 bg-text-main text-text-inverse text-[8px] font-black rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-sm">
+          {{ cartCount() }}
+        </span>
+      </a>
+
+      <!-- Account / Authentication -->
+      <div class="relative group/user">
+        <button class="flex items-center gap-2 group">
+          <i class="fa-regular fa-user text-lg text-text-main group-hover:text-primary transition-all"></i>
+          <span *ngIf="currentUser()" class="hidden xl:block text-[10px] font-black uppercase tracking-widest text-text-muted group-hover:text-text-main transition-colors italic">
+            {{ currentUser()?.fullName || currentUser()?.username }}
+          </span>
+        </button>
+
+        <!-- Tooltip Dropdown -->
+        <div class="absolute right-0 top-full mt-4 w-56 bg-bg-surface border border-border-subtle shadow-shadow-lg opacity-0 invisible group-hover/user:opacity-100 group-hover/user:visible transition-all duration-300 p-2 z-[1001]">
+           @if (currentUser()) {
+              <div class="p-4 border-b border-border-subtle mb-2">
+                 <p class="text-[11px] font-black uppercase tracking-tighter text-text-main overflow-hidden truncate">Chào, {{ currentUser()?.fullName }}</p>
+                 <p class="text-[8px] font-black uppercase tracking-widest text-primary mt-1">Hội viên TrendyBox</p>
+              </div>
+              <a routerLink="/profile" class="block px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-bg-main transition-colors text-left font-bold">Hồ sơ cá nhân</a>
+              <a routerLink="/orders" class="block px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-bg-main transition-colors text-left font-bold border-b border-border-subtle pb-3 mb-1">Đơn hàng của tôi</a>
+              @if (currentUser()?.roles?.includes('ROLE_ADMIN')) {
+                 <a routerLink="/admin/dashboard" class="block px-4 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-bg-main transition-colors text-left text-primary font-bold italic">Quản trị hệ thống</a>
+              }
+              <button (click)="logout()" class="w-full text-left px-4 py-3 text-[10px] font-black uppercase tracking-widest text-error hover:bg-error/10 transition-colors mt-2 border-t border-border-subtle">Đăng xuất</button>
+           } @else {
+              <div class="p-6 text-center space-y-4">
+                 <p class="text-[9px] font-black uppercase tracking-[0.2em] text-text-muted">Trải nghiệm quyền lợi</p>
+                 <a routerLink="/auth/login" class="block w-full bg-text-main text-text-inverse py-3 rounded-radius-sm text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all shadow-md italic">Đăng nhập ngay</a>
+                 <div class="flex items-center gap-2 py-2">
+                   <div class="h-px flex-1 bg-border-subtle"></div>
+                   <span class="text-[8px] font-black text-text-muted uppercase">Hoặc</span>
+                   <div class="h-px flex-1 bg-border-subtle"></div>
+                 </div>
+                 <a routerLink="/auth/register" class="text-[9px] font-black uppercase tracking-widest text-text-main hover:text-primary transition-colors underline underline-offset-4 decoration-2 italic">Kiến tạo tài khoản mới</a>
+              </div>
+           }
         </div>
       </div>
 
-      <!-- Logic Profile -->
-      <ng-container *ngIf="!currentUser; else loggedInTpl">
-        <a routerLink="/auth/login"><span title="Đăng nhập"
-            style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Đăng nhập</span></a>
-      </ng-container>
+    </div>
+  </nav>
+</header>
 
-      <ng-template #loggedInTpl>
-        <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
-          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName ||
-            currentUser.username }}</span>
-          <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất"
-            style="font-size: 0.8rem; color: var(--text-secondary);">[Thoát]</a>
+<!-- Mobile Navigation Sidebar -->
+<div class="fixed inset-0 z-[100] transition-all duration-500" 
+     [class.invisible]="!isMobileMenuOpen()" [class.opacity-0]="!isMobileMenuOpen()">
+  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" (click)="toggleMobileMenu()"></div>
+  <div class="absolute top-0 left-0 w-80 h-full bg-bg-surface flex flex-col transition-transform duration-500 shadow-shadow-lg"
+       [class.-translate-x-full]="!isMobileMenuOpen()" [class.translate-x-0]="isMobileMenuOpen()">
+    
+    <div class="p-8 border-b border-border-subtle flex items-center justify-between">
+      <span class="font-headline text-xl font-bold tracking-tighter uppercase">Danh mục</span>
+      <button (click)="toggleMobileMenu()" class="material-symbols-outlined text-outline hover:text-on-surface transition-colors">close</button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-8 space-y-12">
+      <!-- Mobile Search -->
+      <div class="space-y-4">
+        <p class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold">Tìm kiếm nhanh</p>
+        <div class="relative">
+          <input type="text" placeholder="Tìm sản phẩm..." 
+                 class="w-full bg-surface-container-low border-0 text-[11px] font-black uppercase tracking-widest p-4 focus:ring-1 focus:ring-on-surface">
         </div>
-      </ng-template>
+      </div>
 
-      <a routerLink="/cart" class="cart-icon">
-        <span title="Cart"><i class="fa-solid fa-cart-shopping"></i></span>
-        <span class="cart-badge" *ngIf="(cartCount$ | async) as count">{{ count }}</span>
-      </a>
+      <!-- Navigation -->
+      <nav class="space-y-10">
+        <div class="space-y-4">
+          <p class="font-label text-[9px] tracking-[0.2em] text-outline uppercase font-bold">Thời trang</p>
+          <ul class="space-y-6">
+            <li><a routerLink="/category/nam" (click)="toggleMobileMenu()" class="font-headline text-2xl font-bold uppercase tracking-tight block hover:text-primary transition-colors italic">Sản phẩm Nam</a></li>
+            <li><a routerLink="/category/nu" (click)="toggleMobileMenu()" class="font-headline text-2xl font-bold uppercase tracking-tight block hover:text-primary transition-colors italic">Sản phẩm Nữ</a></li>
+            <li><a routerLink="/products" (click)="toggleMobileMenu()" class="font-headline text-2xl font-bold uppercase tracking-tight block hover:text-primary transition-colors italic">Bộ sưu tập</a></li>
+            <li><a routerLink="/category/phu-kien" (click)="toggleMobileMenu()" class="font-headline text-2xl font-bold uppercase tracking-tight block hover:text-primary transition-colors italic">Phụ kiện</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Mobile Auth Footer -->
+    <div class="p-8 border-t border-border-subtle bg-bg-main">
+      @if (currentUser()) {
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-on-surface text-surface flex items-center justify-center font-bold">{{ currentUser()?.fullName?.charAt(0) }}</div>
+          <div>
+            <p class="font-headline text-sm font-bold uppercase tracking-tight">{{ currentUser()?.fullName }}</p>
+            <button (click)="logout(); toggleMobileMenu()" class="font-label text-[9px] text-error font-black uppercase tracking-widest italic decoration-2 underline">Đăng xuất</button>
+          </div>
+        </div>
+      } @else {
+        <a routerLink="/auth/login" (click)="toggleMobileMenu()" 
+           class="block w-full py-5 bg-on-surface text-surface text-center font-label text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-primary-dim transition-all shadow-editorial">
+          Đăng nhập tài khoản
+        </a>
+      }
     </div>
   </div>
-</nav>
+</div>
