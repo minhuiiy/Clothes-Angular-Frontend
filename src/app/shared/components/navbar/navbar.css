@@ -3,7 +3,7 @@
   top: 0;
   z-index: 1000;
   padding: 1.2rem 0;
-  background: rgba(245, 243, 239, 0.85); /* #F5F3EF with opacity */
+  background: rgba(254, 254, 229, 0.85); /* #fefee5 with opacity */
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
