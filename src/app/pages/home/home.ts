@@ -1,10 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ProductService, IProduct } from '../../core/services/product.service';
+import { CategoryService, ICategory } from '../../core/services/category.service';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [RouterLink, CommonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home {}
+export class Home implements OnInit {
+  featuredProducts: IProduct[] = [];
+  categories: ICategory[] = [];
+
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
+
+  ngOnInit(): void {
+    this.productService.getProducts({ size: 8, sort: 'featured' }).subscribe({
+      next: (data) => {
+        if (data && data.products) {
+          this.featuredProducts = data.products;
+        }
+      }
+    });
+
+    this.categoryService.getAll();
+    this.categoryService.categories$.subscribe(data => {
+      // Just take top 3 for the home page cards
+      if (data && data.length > 0) {
+         this.categories = data.slice(0, 3);
+      }
+    });
+  }
+}
+

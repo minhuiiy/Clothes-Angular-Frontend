@@ -21,44 +21,43 @@
     </div>
   </section>
 
-  <!-- Featured Collections -->
-  <section class="collections-section container">
+  <!-- Dynamic Categories -->
+  <section class="collections-section container" *ngIf="categories.length > 0">
     <div class="section-header">
       <h2 class="section-title">Xu Hướng Nổi Bật</h2>
-      <a routerLink="/products" class="view-all">Xem tất cả</a>
+      <a routerLink="/products" class="view-all">Xem tất cả Danh Mục</a>
     </div>
 
     <div class="collections-grid">
-      <div class="collection-card">
+      <div class="collection-card" *ngFor="let cat of categories">
         <div class="card-image">
-          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thời trang Nữ">
+          <img [src]="cat.imageUrl || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'" [alt]="cat.name">
         </div>
         <div class="card-content">
-          <h3>Thời Trang Nữ</h3>
-          <p>Sự kiêu hãnh của phái đẹp.</p>
-          <a routerLink="/products" [queryParams]="{category: 'nu'}" class="btn-text">Mua sắm Nữ &rarr;</a>
+          <h3>{{ cat.name }}</h3>
+          <p>{{ cat.description || 'Khám phá bộ sưu tập mới.' }}</p>
+          <a routerLink="/products" [queryParams]="{categoryId: cat.id}" class="btn-text">Mua sắm &rarr;</a>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="collection-card">
-        <div class="card-image">
-          <img src="https://images.unsplash.com/photo-1516826957135-7331826622ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Thời trang Nam">
+  <!-- Featured Products -->
+  <section class="featured-products-section collections-section container" *ngIf="featuredProducts.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">Thiết Kế Tiêu Biểu</h2>
+      <a routerLink="/products" class="view-all">Xem tất cả Sản Phẩm</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product-card" *ngFor="let prod of featuredProducts" [routerLink]="['/products', prod.id]">
+        <div class="product-image">
+          <img [src]="prod.imageUrl || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f'" [alt]="prod.name">
         </div>
-        <div class="card-content">
-          <h3>Thời Trang Nam</h3>
-          <p>Phong thái lịch lãm, hiện đại.</p>
-          <a routerLink="/products" [queryParams]="{category: 'nam'}" class="btn-text">Mua sắm Nam &rarr;</a>
-        </div>
-      </div>
-      
-      <div class="collection-card">
-        <div class="card-image">
-          <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Phụ Kiện">
-        </div>
-        <div class="card-content">
-          <h3>Phụ Kiện Essential</h3>
-          <p>Mảnh ghép hoàn hảo cho outfit.</p>
-          <a routerLink="/products" [queryParams]="{category: 'phukien'}" class="btn-text">Mua Phụ Kiện &rarr;</a>
+        <div class="product-info">
+          <div class="product-brand" *ngIf="prod.brand?.name">{{ prod.brand?.name }}</div>
+          <h3 class="product-name">{{ prod.name }}</h3>
+          <p class="product-price">{{ prod.price | currency:'VND':'symbol':'1.0-0' }}</p>
         </div>
       </div>
     </div>
