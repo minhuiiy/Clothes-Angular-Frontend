@@ -1,18 +1,18 @@
-/* Tùy chỉnh màu sắc Xanh/Trắng chủ đạo */
+/* Tùy chỉnh màu sắc The Editorial Muse (Atelier Noir & Ecru) */
 :root {
-  --primary-color: #0d6efd; /* Blue */
-  --primary-hover: #0b5ed7;
-  --secondary-color: #e2e8f0; /* Soft gray/blue for backgrounds */
-  --accent-color: #3b82f6; /* Vibrant blue accent */
+  --primary-color: #1A1A1A; /* Đen tuyền Editorial */
+  --primary-hover: #333333;
+  --secondary-color: #EFEDE8; /* Nền kem phụ */
+  --accent-color: #D8DDA9; /* Xanh olive Accent */
   
-  --bg-color: #ffffff; /* White background */
-  --text-primary: #1e293b; /* Dark slate text */
-  --text-secondary: #64748b; /* Lighter text */
+  --bg-color: #F5F3EF; /* White/Cream background */
+  --text-primary: #1A1A1A; /* Dark slate text */
+  --text-secondary: #555555; /* Lighter text */
   --text-white: #ffffff;
 
-  --border-radius: 8px;
-  --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --box-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --border-radius: 4px; /* Vuông vức, thanh lịch hơn */
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
 }
 
@@ -22,6 +22,11 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   line-height: 1.6;
+}
+
+/* Kiểu chữ tiêu đề dùng font Serif sang trọng */
+h1, h2, h3, h4, h5, h6, .navbar .logo a, .page-title, .banner-title {
+  font-family: 'Playfair Display', serif !important;
 }
 
 /* Các lớp tiện ích (Utility classes) */
