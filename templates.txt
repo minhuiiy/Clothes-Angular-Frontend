@@ -1,0 +1,9 @@
+﻿
+src\app\pages\admin\category-management\category-manage
+ment.component.ts:16:  templateUrl: 
+'./category-management.component.html',
+src\app\pages\admin\category-management\category-manage
+ment.component.ts:17:  styleUrls: 
+['./category-management.component.css'],
+
+

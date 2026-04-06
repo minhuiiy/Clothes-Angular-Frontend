@@ -3,9 +3,9 @@
   top: 0;
   z-index: 1000;
   padding: 1.2rem 0;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background: rgba(254, 254, 229, 0.85); /* #fefee5 with opacity */
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .nav-content {

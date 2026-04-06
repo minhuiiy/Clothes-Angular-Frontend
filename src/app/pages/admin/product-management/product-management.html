@@ -1,0 +1,152 @@
+<div class="p-12 max-w-7xl mx-auto bg-surface text-on-surface">
+  <div class="flex justify-between items-end mb-16">
+    <div class="space-y-4 max-w-xl">
+      <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary border-b border-primary/20 pb-2 inline-block">Inventory</p>
+      <h2 class="text-5xl font-black font-headline tracking-tighter text-neutral-900 leading-none">Quản Lý <br/><span class="font-normal italic text-neutral-400">Kho Hàng</span></h2>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-sm">search</span>
+        <input class="pl-12 pr-6 py-4 bg-transparent border border-outline-variant/30 focus:border-primary outline-none text-xs w-72 transition-all duration-300" placeholder="TÌM KIẾM SẢN PHẨM..." type="text"/>
+      </div>
+      <button (click)="openModal()" class="px-8 py-4 bg-neutral-900 text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all duration-300">
+        Tạo Mới +
+      </button>
+    </div>
+  </div>
+
+  <div class="flex gap-12 mb-12 border-b border-outline-variant/20">
+    <button class="pb-4 text-xs font-bold tracking-widest uppercase border-b border-neutral-900 text-neutral-900 transition-colors">Tất Cả Sản Phẩm</button>
+    <button class="pb-4 text-xs font-bold tracking-widest uppercase text-neutral-400 hover:text-neutral-700 transition-colors">Sắp Hết Hàng</button>
+    <button class="pb-4 text-xs font-bold tracking-widest uppercase text-neutral-400 hover:text-neutral-700 transition-colors">Ngừng Bán</button>
+  </div>
+
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Mã</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Sản Phẩm</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Danh Mục</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30 text-right">Giá</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30 text-center">Tồn Kho</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30 w-32 text-right">Tùy Chọn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let prod of productList; trackBy: trackByProductId" class="group hover:bg-surface-container-low/50 transition-colors duration-500 border-b border-outline-variant/10">
+        <td class="px-8 py-6">
+          <span class="text-xs font-medium text-neutral-400 font-mono tracking-wider">#PRD-{{ prod.id || 'N/A' }}</span>
+        </td>
+        <td class="px-8 py-6">
+          <div class="flex items-center gap-6">
+            <div class="relative w-16 h-20 overflow-hidden bg-neutral-100 flex-shrink-0">
+              <img [src]="getImageUrl(prod)" [alt]="prod.name" (error)="onImageError($event)" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"/>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold font-headline text-neutral-800 group-hover:text-primary transition-colors cursor-pointer w-48 truncate">{{ prod.name }}</h3>
+              <p class="text-[10px] uppercase tracking-widest text-neutral-500 mt-2">{{ getColorCount(prod) }} Màu</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-8 py-6">
+          <span class="px-3 py-1 bg-neutral-100 text-[10px] uppercase tracking-widest font-bold text-neutral-500">{{ prod.category?.name || 'Không có DS' }}</span>
+        </td>
+        <td class="px-8 py-6 text-right">
+          <span class="text-sm font-bold text-neutral-800">{{ formatPrice(prod.price) }} ₫</span>
+        </td>
+        <td class="px-8 py-6 text-center">
+          <span class="text-xs font-bold text-neutral-900">{{ prod.stock || 0 }}</span>
+        </td>
+        <td class="px-8 py-6 text-right">
+          <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button (click)="openModal(prod)" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button (click)="deleteProduct(prod.id!)" class="text-neutral-400 hover:text-error transition-colors">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <tr *ngIf="productList.length === 0">
+        <td colspan="6" class="py-12 text-center text-neutral-500 text-sm font-medium">Chưa có sản phẩm nào.</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="flex justify-between items-center mt-12 border-t border-outline-variant/20 pt-8">
+    <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-neutral-400">Hiển thị <span class="text-neutral-900">1</span> - <span class="text-neutral-900">{{ productList.length }}</span> của <span class="text-neutral-900">{{ productList.length }}</span></p>
+    <div class="flex items-center gap-4">
+      <button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 text-neutral-400 hover:border-neutral-900 hover:text-neutral-900 transition-colors"><span class="material-symbols-outlined text-sm">west</span></button>
+      <button class="w-10 h-10 flex items-center justify-center border border-outline-variant/30 text-neutral-400 hover:border-neutral-900 hover:text-neutral-900 transition-colors"><span class="material-symbols-outlined text-sm">east</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Thêm/Sửa Sản Phẩm (Minimalist version) -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+  <div class="bg-surface p-12 max-w-2xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    <button (click)="closeModal()" class="absolute top-6 right-6 text-neutral-400 hover:text-neutral-900 transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="mb-10">
+      <p class="text-[10px] tracking-[0.2em] uppercase text-primary mb-2 font-bold">{{ isEdit ? 'Cập Nhật' : 'Thêm Mới' }}</p>
+      <h3 class="text-3xl font-headline font-black text-neutral-900">{{ isEdit ? 'Sửa Sản Phẩm' : 'Tạo Sản Phẩm' }}</h3>
+    </div>
+    
+    <div class="space-y-6">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="col-span-2">
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Tên Sản Phẩm (*)</label>
+          <input type="text" [(ngModel)]="currentProduct.name" class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800" placeholder="Ngắn gọn và súc tích...">
+        </div>
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Giá (VNĐ)</label>
+          <input type="number" [(ngModel)]="currentProduct.price" class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800">
+        </div>
+        <div>
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Tồn Kho</label>
+          <input type="number" [(ngModel)]="currentProduct.stock" class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800">
+        </div>
+        <div class="col-span-2">
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Danh Mục</label>
+          <select [(ngModel)]="currentProduct.categoryId" class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800">
+            <option [ngValue]="null">Chọn phân loại...</option>
+            <option *ngFor="let cat of categoryList" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Mô Tả Sản Phẩm</label>
+          <textarea [(ngModel)]="currentProduct.description" class="w-full bg-transparent border border-outline-variant/30 p-4 min-h-[100px] focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800 resize-none" placeholder="Chi tiết sản phẩm..."></textarea>
+        </div>
+        
+        <div class="col-span-2">
+          <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Hình Ảnh Chính</label>
+          <div class="border border-outline-variant/30 border-dashed p-6 flex flex-col items-center justify-center relative bg-neutral-50 hover:bg-neutral-100 transition-colors cursor-pointer min-h-[160px]">
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+            
+            <ng-container *ngIf="!imagePreviewUrl; else preview">
+              <span class="material-symbols-outlined text-4xl text-neutral-300 mb-2">image</span>
+              <p class="text-xs font-bold text-neutral-500 tracking-widest uppercase">Kéo thả hoặc Nhấn để tải ảnh</p>
+            </ng-container>
+            
+            <ng-template #preview>
+              <img [src]="imagePreviewUrl" class="h-32 object-contain" />
+              <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                 <span class="text-white text-xs font-bold uppercase tracking-widest">Đổi ảnh</span>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-12 flex justify-end gap-4">
+      <button (click)="closeModal()" class="px-8 py-3 text-[11px] uppercase tracking-widest font-bold text-neutral-500 hover:text-neutral-900 transition-colors">Hủy</button>
+      <button (click)="saveProduct()" [disabled]="!currentProduct.name" class="px-8 py-3 bg-neutral-900 text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all duration-300 shadow-md">
+        {{ isEdit ? 'Lưu' : 'Đăng Sản Phẩm' }}
+      </button>
+    </div>
+  </div>
+</div>

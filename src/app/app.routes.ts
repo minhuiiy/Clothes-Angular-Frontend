@@ -4,6 +4,8 @@ import { AuthComponent } from './pages/auth/auth';
 import { ProductList } from './pages/products/product-list/product-list';
 import { ProductDetail } from './pages/products/product-detail/product-detail';
 import { CartComponent } from './pages/cart/cart';
+import { OrderHistoryComponent } from './pages/orders/order-history/order-history.component';
+import { OrderDetailComponent } from './pages/orders/order-detail/order-detail.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ClientLayoutComponent } from './shared/layouts/client-layout/client-layout.component';
 import { AdminLayoutComponent } from './shared/layouts/admin-layout/admin-layout.component';
@@ -23,7 +25,9 @@ export const routes: Routes = [
             { path: 'auth/register', component: AuthComponent, data: { breadcrumb: 'Đăng ký tài khoản' } },
             { path: 'products', component: ProductList, data: { breadcrumb: 'Tất cả sản phẩm' } },
             { path: 'products/:id', component: ProductDetail, data: { breadcrumb: 'Chi tiết sản phẩm' } },
-            { path: 'cart', component: CartComponent, data: { breadcrumb: 'Giỏ hàng' }, canActivate: [authGuard] }
+            { path: 'cart', component: CartComponent, data: { breadcrumb: 'Giỏ hàng' }, canActivate: [authGuard] },
+            { path: 'orders', component: OrderHistoryComponent, data: { breadcrumb: 'Lịch sử đơn hàng' }, canActivate: [authGuard] },
+            { path: 'orders/:id', component: OrderDetailComponent, data: { breadcrumb: 'Chi tiết đơn hàng' }, canActivate: [authGuard] }
         ]
     },
     // Admin Routes
@@ -33,6 +37,10 @@ export const routes: Routes = [
         canActivate: [adminGuard],
         children: [
             { path: '', redirectTo: 'products', pathMatch: 'full' },
+            { path: 'dashboard', redirectTo: 'products' },
+            { path: 'orders', redirectTo: 'products' },
+            { path: 'promotions', redirectTo: 'products' },
+            { path: 'settings', redirectTo: 'products' },
             { path: 'products', component: ProductManagementComponent },
             { path: 'categories', component: CategoryManagementComponent },
             { path: 'user-management', component: UserManagementComponent },

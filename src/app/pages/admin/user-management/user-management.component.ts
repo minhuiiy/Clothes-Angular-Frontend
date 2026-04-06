@@ -135,7 +135,7 @@ export class UserManagementComponent implements OnInit {
     const newStatus = !user.active;
     this.userService.updateStatus(user.id, newStatus).subscribe({
       next: (updated) => {
-        user.active = updated.active;
+        user.active = updated ? updated.active : newStatus;
         this.cdr.markForCheck();
       },
       error: (err) => alert('Lỗi khi cập nhật trạng thái: ' + err.message)
@@ -148,7 +148,7 @@ export class UserManagementComponent implements OnInit {
     if (confirm(`Xác nhận đổi vai trò của ${user.fullName} thành ${roleText}?`)) {
       this.userService.updateRole(user.id, newRole).subscribe({
         next: (updated) => {
-          user.role = updated.role;
+          user.role = updated ? updated.role : newRole;
           this.cdr.markForCheck();
         },
         error: (err) => alert('Lỗi khi cập nhật vai trò: ' + err.message)

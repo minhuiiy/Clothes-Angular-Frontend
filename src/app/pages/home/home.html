@@ -1,52 +1,75 @@
-<div class="home-wrapper">
-  <!-- Main Banner Segment -->
-  <section class="hero-segment">
-    <div class="container hero-content">
-      <div class="hero-text">
-        <h1 class="fade-in-up">THỜI TRANG MÁT MẺ<br><span class="light-text">DÀNH CHO NAM</span></h1>
-        <a routerLink="/products" class="btn btn-outline fade-in-up delay-1">CỬA HÀNG THỜI TRANG</a>
-      </div>
-      <!-- You would replace the src with the actual model image path inside assets -->
-      <div class="hero-image fade-in">
-        <!-- Mock placeholder simulating the image layout -->
-        <img
-          src="https://images.unsplash.com/photo-1516257984-b1b4d707412e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Male Model Fashion" />
-      </div>
-    </div>
-  </section>
-
-  <!-- Promotions / Collections Segment -->
-  <section class="promotions-segment container">
-    <div class="promo-card hover-lift">
-      <img
-        src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        alt="Men's Casuals" class="promo-bg">
-      <div class="promo-content">
-        <h2>THỜI TRANG NAM<br>THƯỜNG NGÀY</h2>
-        <p>CẨM NANG THỜI TRANG THÀNH THỊ DÀNH CHO QUÝ ÔNG</p>
-        <a routerLink="/category/nam" class="small-link">MUA NGAY ▸</a>
-      </div>
-    </div>
-
-    <div class="promo-card hover-lift discount-card">
-      <img
-        src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
-        alt="Fashion 40% Off" class="promo-bg">
-      <div class="promo-content right-align">
-        <h2 class="red-text">THỜI TRANG<br>KHÔNG DẪN ĐẦU;<br> NÓ THEO SAU</h2>
-        <div class="discount-badge">
-          <span class="number">40</span>
-          <span class="percent">% OFF<br>TRÊN ÁO SƠ MI CAO CẤP</span>
+<div class="editorial-home">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-left">
+      <div class="hero-text-content">
+        <h3 class="subtitle">ATELIER NOIR & ECRU</h3>
+        <h1 class="title">Bộ Sưu Tập<br>Mới 2026</h1>
+        <p class="description">
+          Khám phá sự giao thoa hoàn hảo giữa phong cách tối giản thanh lịch và nghệ thuật đương đại trong từng đường kim mũi chỉ.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/products" class="btn-editorial">Khám phá ngay &rarr;</a>
         </div>
-        <a routerLink="/products" class="small-link">MUA NGAY ▸</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-image-wrapper">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Editorial Fashion Collection">
+        <div class="accent-block"></div>
       </div>
     </div>
   </section>
 
-  <!-- Title section for Product Grid -->
-  <section class="category-segment text-center">
-    <h3>Danh mục sản phẩm</h3>
-    <div class="divider"></div>
+  <!-- Dynamic Categories -->
+  <section class="collections-section container" *ngIf="categories.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">Xu Hướng Nổi Bật</h2>
+      <a routerLink="/products" class="view-all">Xem tất cả Danh Mục</a>
+    </div>
+
+    <div class="collections-grid">
+      <div class="collection-card" *ngFor="let cat of categories">
+        <div class="card-image">
+          <img [src]="cat.imageUrl || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'" [alt]="cat.name">
+        </div>
+        <div class="card-content">
+          <h3>{{ cat.name }}</h3>
+          <p>{{ cat.description || 'Khám phá bộ sưu tập mới.' }}</p>
+          <a routerLink="/products" [queryParams]="{categoryId: cat.id}" class="btn-text">Mua sắm &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="featured-products-section collections-section container" *ngIf="featuredProducts.length > 0">
+    <div class="section-header">
+      <h2 class="section-title">Thiết Kế Tiêu Biểu</h2>
+      <a routerLink="/products" class="view-all">Xem tất cả Sản Phẩm</a>
+    </div>
+
+    <div class="products-grid">
+      <div class="product-card" *ngFor="let prod of featuredProducts" [routerLink]="['/products', prod.id]">
+        <div class="product-image">
+          <img [src]="prod.imageUrl || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f'" [alt]="prod.name">
+        </div>
+        <div class="product-info">
+          <div class="product-brand" *ngIf="prod.brand?.name">{{ prod.brand?.name }}</div>
+          <h3 class="product-name">{{ prod.name }}</h3>
+          <p class="product-price">{{ prod.price | currency:'VND':'symbol':'1.0-0' }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Signature Banner -->
+  <section class="signature-section">
+    <div class="signature-container">
+      <div class="signature-text">
+        <h2>"Thời trang không chỉ là quần áo, nó là nghệ thuật thể hiện bản ngã."</h2>
+        <p>- Atelier Noir & Ecru</p>
+      </div>
+    </div>
   </section>
 </div>

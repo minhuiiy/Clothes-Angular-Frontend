@@ -1,0 +1,23 @@
+﻿commit fe60c1abb44798a0d058629cd54323b2a3b3e282
+Author: V├╡ Quß╗æc Kh├ính <vqk2345@gmail.com>
+Date:   Mon Apr 6 02:37:46 2026 +0700
+
+    feat: admin dashboard
+
+src/app/app.config.ts
+src/app/app.routes.ts
+src/app/core/guards/admin.guard.ts
+src/app/core/interceptors/auth.interceptor.ts
+src/app/core/models/user.model.ts
+src/app/core/services/auth.ts
+src/app/core/services/category.service.ts
+src/app/core/services/product.service.ts
+src/app/core/services/user.service.ts
+src/app/pages/admin/category-management/category-management.component.ts
+src/app/pages/admin/product-management/product-management.ts
+src/app/pages/admin/user-management/user-management.component.ts
+src/app/pages/products/product-list/product-list.ts
+src/app/shared/components/navbar/navbar.html
+src/app/shared/components/navbar/navbar.ts
+src/app/shared/layouts/admin-layout/admin-layout.component.ts
+src/app/shared/layouts/client-layout/client-layout.component.ts

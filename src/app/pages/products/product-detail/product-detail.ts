@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,8 @@ export class ProductDetail implements OnInit {
     private router: Router,
     private productService: ProductService,
     private cartService: CartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -31,6 +32,7 @@ export class ProductDetail implements OnInit {
       this.productService.getProductById(+idParam).subscribe({
         next: (data) => {
           this.product = data;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error fetching product details', err);

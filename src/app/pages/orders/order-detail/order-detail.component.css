@@ -1,0 +1,263 @@
+.order-detail-container {
+  background-color: #F5F3EF;
+  color: #1A1A1A;
+  min-height: 100vh;
+  padding: 60px 8%;
+  font-family: 'Inter', sans-serif;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #666;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: #1A1A1A;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 400;
+  margin: 0 0 15px 0;
+}
+
+.order-meta {
+  font-size: 12px;
+  color: #555;
+  letter-spacing: 1px;
+}
+
+/* Status Tracker */
+.tracker-section {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto 80px auto;
+  padding: 0 20px;
+}
+
+.tracker-line {
+  position: absolute;
+  top: 15px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background-color: #D8DDA9;
+  z-index: 1;
+}
+
+.tracker-steps {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 120px;
+}
+
+.step .dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #F5F3EF;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.step.completed .dot {
+  background-color: #1A1A1A;
+  border-color: #1A1A1A;
+}
+
+.step.active .dot {
+  background-color: #B88E2F;
+  border-color: #B88E2F;
+}
+
+.step .label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.step.completed .label, .step.active .label {
+  color: #1A1A1A;
+  font-weight: 500;
+}
+
+/* Content Columns */
+.content-section {
+  display: flex;
+  gap: 60px;
+}
+
+.items-column {
+  flex: 3;
+}
+
+.item-card {
+  display: flex;
+  gap: 25px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.item-img {
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  background-color: #e5e5e5;
+}
+
+.item-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item-meta {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.item-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.item-variant, .item-qty {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.item-price {
+  font-size: 15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.info-column {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.info-block {
+  padding-bottom: 30px;
+}
+
+.info-title {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #1A1A1A;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 15px;
+}
+
+.customer-name {
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.address-text, .phone-text {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 5px;
+}
+
+.summary-box {
+  background-color: #EFEDE8;
+  padding: 30px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.summary-row.discount {
+  color: #D32F2F;
+}
+
+.summary-row.total {
+  font-size: 18px;
+  font-family: 'Playfair Display', serif;
+  color: #1A1A1A;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 35px;
+}
+
+.btn-dark {
+  background-color: #1A1A1A;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #1A1A1A;
+  border: 1px solid #1A1A1A;
+  padding: 15px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-dark:hover, .btn-outline:hover {
+  opacity: 0.8;
+}

@@ -81,8 +81,8 @@
              style="font-size: 0.8rem; font-weight: bold; background: #0f172a; color: white; padding: 4px 10px; border-radius: 4px;">
             Quản trị
           </a>
-          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName ||
-            currentUser.username }}</span>
+          <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName || currentUser.username }}</span>
+          <a routerLink="/orders" style="font-size: 0.85rem; font-weight: bold; text-decoration: underline;">Đơn hàng</a>
           <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất"
             style="font-size: 0.8rem; color: var(--text-secondary);">[Thoát]</a>
         </div>

@@ -1,0 +1,71 @@
+<div class="order-detail-container">
+  <div class="header-section">
+    <a routerLink="/orders" class="back-link"><i class="fa fa-arrow-left"></i> QUAY QUAY LẠI</a>
+    <h1 class="page-title">Chi tiết đơn hàng</h1>
+    <p class="order-meta">MÃ ĐƠN HÀNG: {{ orderId }} &nbsp;&bull;&nbsp; ĐẶT NGÀY {{ orderDate }}</p>
+  </div>
+
+  <div class="tracker-section">
+    <div class="tracker-line"></div>
+    <div class="tracker-steps">
+      <div class="step" *ngFor="let step of statusSteps" [class.completed]="step.completed" [class.active]="step.active">
+        <div class="dot"><i class="fa fa-check" *ngIf="step.completed"></i></div>
+        <div class="label">{{ step.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <div class="items-column">
+      <div class="item-card" *ngFor="let item of items">
+        <img [src]="item.image" [alt]="item.name" class="item-img">
+        <div class="item-info">
+          <div class="item-meta">{{ item.category }}</div>
+          <div class="item-name">{{ item.name }}</div>
+          <div class="item-variant">{{ item.variant }}</div>
+          <div class="item-qty">Số lượng: {{ item.quantity }}</div>
+        </div>
+        <div class="item-price">{{ item.price }}</div>
+      </div>
+    </div>
+
+    <div class="info-column">
+      <div class="info-block">
+        <h3 class="info-title">THÔNG TIN GIAO HÀNG</h3>
+        <p class="customer-name">{{ shipping.name }}</p>
+        <p class="address-text">{{ shipping.address }}</p>
+        <p class="phone-text">{{ shipping.phone }}</p>
+      </div>
+      
+      <div class="info-block payment">
+        <h3 class="info-title">PHƯƠNG THỨC THANH TOÁN</h3>
+        <p><i class="fa fa-university"></i> Chuyển khoản ngân hàng</p>
+      </div>
+
+      <div class="summary-box">
+        <h3 class="info-title text-center mb-4">TỔNG KẾT ĐƠN HÀNG</h3>
+        <div class="summary-row">
+          <span>TẠM TÍNH</span>
+          <span>{{ summary.subtotal }}</span>
+        </div>
+        <div class="summary-row">
+          <span>PHÍ VẬN CHUYỂN</span>
+          <span>{{ summary.shipping }}</span>
+        </div>
+        <div class="summary-row discount">
+          <span>GIẢM GIÁ</span>
+          <span>{{ summary.discount }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>TỔNG KHÁCH TRẢ</span>
+          <span>{{ summary.total }}</span>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn-dark">THEO DÕI ĐƠN HÀNG</button>
+          <button class="btn-outline">YÊU CẦU HỖ TRỢ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

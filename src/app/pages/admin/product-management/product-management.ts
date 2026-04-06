@@ -827,25 +827,20 @@ export class ProductManagementComponent implements OnInit {
   }
 
   saveProduct(): void {
-    const formData = new FormData();
-    formData.append('name', this.currentProduct.name);
-    formData.append('price', this.currentProduct.price.toString());
-    formData.append('stock', this.currentProduct.stock.toString());
-
-    if (this.currentProduct.description) {
-      formData.append('description', this.currentProduct.description);
-    }
-
+    const payload: Partial<IProduct> = {
+      name: this.currentProduct.name || '',
+      price: Number(this.currentProduct.price) || 0,
+      stock: Number(this.currentProduct.stock) || 0,
+      description: this.currentProduct.description || '',
+    };
+    
+    // Add categoryId if it's selected
     if (this.currentProduct.categoryId) {
-      formData.append('categoryId', this.currentProduct.categoryId.toString());
-    }
-
-    if (this.selectedFile) {
-      formData.append('file', this.selectedFile);
+      payload.categoryId = this.currentProduct.categoryId as any;
     }
 
     if (this.isEdit) {
-      this.productService.updateProduct(this.currentProduct.id, formData).subscribe({
+      this.productService.updateProduct(this.currentProduct.id, payload).subscribe({
         next: () => {
           this.closeModal();
           this.loadProducts();
@@ -853,7 +848,7 @@ export class ProductManagementComponent implements OnInit {
         error: (err) => console.error('Error updating product:', err)
       });
     } else {
-      this.productService.createProduct(formData).subscribe({
+      this.productService.createProduct(payload).subscribe({
         next: () => {
           this.closeModal();
           this.loadProducts();

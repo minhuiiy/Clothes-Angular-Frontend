@@ -1,27 +1,32 @@
-/* Tùy chỉnh màu sắc Xanh/Trắng chủ đạo */
+/* Tùy chỉnh màu sắc The Editorial Muse (Atelier Noir & Ecru - Stitch) */
 :root {
-  --primary-color: #0d6efd; /* Blue */
-  --primary-hover: #0b5ed7;
-  --secondary-color: #e2e8f0; /* Soft gray/blue for backgrounds */
-  --accent-color: #3b82f6; /* Vibrant blue accent */
+  --primary-color: #1A1A1A; /* Đen tuyền Editorial */
+  --primary-hover: #5f5e5e; /* surface-tint */
+  --secondary-color: #faf7f6; /* on-primary nền phụ */
+  --accent-color: #fe8b70; /* error-container / accent điểm nhấn */
   
-  --bg-color: #ffffff; /* White background */
-  --text-primary: #1e293b; /* Dark slate text */
-  --text-secondary: #64748b; /* Lighter text */
-  --text-white: #ffffff;
+  --bg-color: #fefee5; /* Stitch Cream background */
+  --text-primary: #1A1A1A; /* Dark slate text */
+  --text-secondary: #5f5e5e; /* Lighter text */
+  --text-white: #faf7f6;
 
-  --border-radius: 8px;
-  --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --box-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --border-radius: 4px; /* Vuông vức, thanh lịch hơn */
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --box-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-family: 'Manrope', 'Inter', 'Roboto', sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
   line-height: 1.6;
+}
+
+/* Kiểu chữ tiêu đề dùng Noto Serif sang trọng */
+h1, h2, h3, h4, h5, h6, .navbar .logo a, .page-title, .banner-title {
+  font-family: 'Noto Serif', serif !important;
 }
 
 /* Các lớp tiện ích (Utility classes) */

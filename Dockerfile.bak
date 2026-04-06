@@ -1,0 +1,16 @@
+# Stage 1: Build the Angular application
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+# Run the build command as specified in package.json
+RUN npm run build
+
+# Stage 2: Serve the application with Nginx
+FROM nginx:alpine
+# Angular v17+ application builder outputs inside the browser directory
+COPY --from=build /app/dist/clothes-ui/browser /usr/share/nginx/html
+# We must expose port 80 since docker-compose maps port 4200 to 80
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

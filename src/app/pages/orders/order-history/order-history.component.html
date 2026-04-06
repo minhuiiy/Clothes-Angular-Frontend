@@ -1,0 +1,56 @@
+<div class="order-history-container">
+  <div class="header-section">
+    <h1 class="page-title">Lịch sử đơn hàng</h1>
+    <p class="subtitle">Xem lại các lựa chọn được lưu trữ từ các bộ sưu tập trước đây của bạn.</p>
+  </div>
+
+  <div class="content-section">
+    <div class="filters">
+      <h3 class="filter-title">TRẠNG THÁI</h3>
+      <ul class="filter-list">
+        <li *ngFor="let filter of filters" 
+            [class.active]="activeFilter === filter" 
+            (click)="setFilter(filter)">
+          {{ filter }}
+        </li>
+      </ul>
+      
+      <div class="promo-box">
+        <p class="promo-text">Dành cho những người đam mê sự thanh lịch, những bộ sưu tập của chúng tôi sẽ mang lại những phong cách định hình xu hướng.</p>
+      </div>
+    </div>
+
+    <div class="orders-list">
+      <div class="orders-header">
+        <div class="col-id">MÃ ĐƠN HÀNG</div>
+        <div class="col-date">NGÀY ĐẶT</div>
+        <div class="col-total">TỔNG CỘNG</div>
+        <div class="col-status">TRẠNG THÁI</div>
+        <div class="col-action">HÀNH ĐỘNG</div>
+      </div>
+
+      <div class="order-card" *ngFor="let order of filteredOrders">
+        <div class="col-id font-serif">{{ order.id }}</div>
+        <div class="col-date">{{ order.date }}</div>
+        <div class="col-total">{{ order.total }}</div>
+        <div class="col-status">
+          <span class="status-badge" [ngClass]="{'processing': order.status === 'ĐANG GIAO', 'completed': order.status === 'ĐÃ HOÀN THÀNH'}">
+            <span class="dot"></span> {{ order.status }}
+          </span>
+        </div>
+        <div class="col-action">
+          <a [routerLink]="['/orders', order.id]" class="view-details">XEM CHI TIẾT <i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="banner-section">
+    <div class="banner-image"></div>
+    <div class="banner-content">
+      <h2 class="banner-title">Khám phá phong cách <br>mới từ Archive.</h2>
+      <p class="banner-desc">Những thiết kế vượt thời gian, tập trung vào cấu trúc và chất liệu cao cấp nhất từ xưởng may của chúng tôi.</p>
+      <button class="btn-dark">KHÁM PHÁ ARCHIVE</button>
+    </div>
+  </div>
+</div>
