@@ -37,6 +37,10 @@ export const routes: Routes = [
         canActivate: [adminGuard],
         children: [
             { path: '', redirectTo: 'products', pathMatch: 'full' },
+            { path: 'dashboard', redirectTo: 'products' },
+            { path: 'orders', redirectTo: 'products' },
+            { path: 'promotions', redirectTo: 'products' },
+            { path: 'settings', redirectTo: 'products' },
             { path: 'products', component: ProductManagementComponent },
             { path: 'categories', component: CategoryManagementComponent },
             { path: 'user-management', component: UserManagementComponent },

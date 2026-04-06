@@ -1,75 +1,98 @@
-<div class="category-admin-page p-8 bg-white min-h-screen">
-  <div class="page-header mb-8">
-    <h1 class="text-[26px] font-black text-black uppercase tracking-wide">QUẢN LÝ DANH MỤC</h1>
-    <button class="add-btn mt-4 px-4 py-2 bg-black text-white rounded" (click)="openModal()">+ Thêm danh mục</button>
-  </div>
-
-  <div class="controls-row flex flex-col md:flex-row gap-6 mb-6 items-center justify-start">
-    <div class="search-box relative w-full md:w-80">
-      <input 
-        type="text" 
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="onSearchChange()"
-        placeholder="Tìm kiếm danh mục..." 
-        class="block w-full pl-4 pr-4 py-2.5 bg-[#f1f3f5] rounded-full text-sm outline-none placeholder-gray-500 font-medium text-gray-800"
-      >
+<div class="p-12 max-w-7xl mx-auto bg-surface text-on-surface">
+  <!-- Header Section with Asymmetry -->
+  <div class="flex justify-between items-end mb-16">
+    <div class="space-y-4 max-w-xl">
+      <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary border-b border-primary/20 pb-2 inline-block">Directory</p>
+      <h2 class="text-5xl font-black font-headline tracking-tighter text-neutral-900 leading-none">Danh Mục <br/><span class="font-normal italic text-neutral-400">Sản Phẩm</span></h2>
     </div>
+    <button (click)="openModal()" class="px-8 py-4 bg-neutral-900 text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all duration-300">
+        Tạo Danh Mục Mới +
+    </button>
   </div>
 
-  <div class="table-wrapper overflow-hidden rounded-t-lg">
-    <table class="category-table w-full text-left border-collapse">
-      <thead>
-        <tr class="bg-[#c2d4ff] text-black">
-          <th class="px-6 py-3.5 font-bold text-sm">Tên danh mục</th>
-          <th class="px-6 py-3.5 font-bold text-sm">Mô tả</th>
-          <th class="px-6 py-3.5 font-bold text-sm">Trạng thái</th>
-          <th class="px-6 py-3.5 font-bold text-sm">Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cat of filteredCategories" class="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
-          <td class="px-6 py-4 text-sm text-gray-800 font-medium">{{cat.name}}</td>
-          <td class="px-6 py-4 text-sm text-gray-800">{{cat.description}}</td>
-          <td class="px-6 py-4 text-sm">
-            <button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full cursor-pointer transition-all font-bold text-xs text-white"
-                    [ngClass]="cat.status ? 'bg-[#22c55e] hover:bg-[#1fa951]' : 'bg-[#c81e1e] hover:bg-[#a51919]'"
-                    (click)="toggleStatus(cat)">
-              {{cat.status ? 'Hoạt động' : 'Tạm ẩn'}}
+  <!-- Category Grid / Table Hybrid -->
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Mã</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Danh Mục</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Mô Tả</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30">Trạng Thái</th>
+        <th class="px-8 py-6 uppercase tracking-[0.2em] font-bold text-[10px] text-neutral-500 border-b border-outline-variant/30 w-32 text-right">Tùy Chọn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cat of filteredCategories; let i = index" class="group hover:bg-surface-container-low/50 transition-colors duration-500 border-b border-outline-variant/10">
+        <td class="px-8 py-8">
+          <span class="text-xs font-medium text-neutral-400 font-mono tracking-wider">#CAT-{{ cat.id || 'N/A' }}</span>
+        </td>
+        <td class="px-8 py-8">
+          <h3 class="text-lg font-bold font-headline text-neutral-800 group-hover:text-primary transition-colors cursor-pointer">{{ cat.name }}</h3>
+        </td>
+        <td class="px-8 py-8">
+          <p class="text-[13px] text-neutral-500 w-64 truncate">{{ cat.description || 'Không có mô tả' }}</p>
+        </td>
+        <td class="px-8 py-8">
+          <button (click)="toggleStatus(cat)" [ngClass]="cat.status ? 'bg-primary/5 text-primary border-primary/20' : 'bg-neutral-100 text-neutral-400 border-neutral-200'" class="px-3 py-1 text-[10px] uppercase tracking-widest font-bold border rounded-none transition-colors">
+            {{ cat.status ? 'Hiển Thị' : 'Tạm Ẩn' }}
+          </button>
+        </td>
+        <td class="px-8 py-8 text-right">
+          <div class="flex items-center justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button (click)="openModal(cat)" class="text-neutral-400 hover:text-neutral-900 transition-colors">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
             </button>
-          </td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-2">
-              <button class="w-7 h-7 rounded-[4px] bg-[#fbbf24] text-white flex items-center justify-center hover:bg-yellow-500 transition-colors" 
-                      (click)="openModal(cat)">Sửa</button>
-              <button class="w-7 h-7 rounded-[4px] bg-[#ef4444] text-white flex items-center justify-center hover:bg-red-600 transition-colors" 
-                      (click)="deleteCategory(cat.id)">Xóa</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <button (click)="deleteCategory(cat.id)" class="text-neutral-400 hover:text-error transition-colors">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
 
-  <!-- Modal -->
-  <div class="modal" *ngIf="showModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
-    <div class="modal-content bg-white p-6 rounded" style="width: 400px; max-width: 90%;">
-      <h2 class="text-xl mb-4 font-bold">{{ isEdit ? 'Sửa danh mục' : 'Thêm mới danh mục' }}</h2>
-      <div class="mb-4">
-        <label class="block mb-2 text-sm font-bold">Tên danh mục</label>
-        <input type="text" [(ngModel)]="currentCategory.name" class="w-full border p-2 rounded">
+      <!-- Trạng thái trống nếu không có dữ liệu -->
+      <tr *ngIf="filteredCategories.length === 0">
+        <td colspan="5" class="py-12 text-center text-neutral-500 text-sm font-medium">
+          Không tìm thấy danh mục nào.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity">
+  <div class="bg-surface p-12 max-w-lg w-full shadow-2xl relative">
+    <button (click)="closeModal()" class="absolute top-6 right-6 text-neutral-400 hover:text-neutral-900 transition-colors">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="mb-10">
+      <p class="text-[10px] tracking-[0.2em] uppercase text-primary mb-2 font-bold">{{ isEdit ? 'Cập Nhật' : 'Thêm Mới' }}</p>
+      <h3 class="text-3xl font-headline font-black text-neutral-900">{{ isEdit ? 'Sửa Danh Mục' : 'Quản Lý Danh Mục' }}</h3>
+    </div>
+    
+    <div class="space-y-6">
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Tên Danh Mục</label>
+        <input type="text" [(ngModel)]="currentCategory.name" class="w-full bg-transparent border-b border-outline-variant/30 py-2 focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800" placeholder="Nhập tên...">
       </div>
-      <div class="mb-4">
-        <label class="block mb-2 text-sm font-bold">Mô tả</label>
-        <textarea [(ngModel)]="currentCategory.description" class="w-full border p-2 rounded" rows="3"></textarea>
+      <div>
+        <label class="block text-[11px] uppercase tracking-widest font-bold text-neutral-500 mb-3">Mô Tả</label>
+        <textarea [(ngModel)]="currentCategory.description" class="w-full bg-transparent border border-outline-variant/30 p-4 min-h-[100px] focus:border-primary focus:outline-none transition-colors text-sm text-neutral-800 resize-none" placeholder="Nhập mô tả ngắn..."></textarea>
       </div>
-      <div class="mb-4 flex items-center gap-2">
-        <input type="checkbox" [(ngModel)]="currentCategory.status" id="catStatus">
-        <label for="catStatus" class="text-sm font-bold">Kích hoạt</label>
+      <div class="flex items-center gap-4">
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" [(ngModel)]="currentCategory.status" class="sr-only peer">
+          <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+          <span class="ml-3 text-[11px] uppercase tracking-widest font-bold text-neutral-600">Trạng Thái Hiển Thị</span>
+        </label>
       </div>
-      <div class="flex justify-end gap-2">
-        <button class="px-4 py-2 border rounded" (click)="closeModal()">Hủy</button>
-        <button class="px-4 py-2 bg-blue-600 text-white rounded" (click)="saveCategory()">Lưu</button>
-      </div>
+    </div>
+    
+    <div class="mt-12 flex justify-end gap-4">
+      <button (click)="closeModal()" class="px-8 py-3 text-[11px] uppercase tracking-widest font-bold text-neutral-500 hover:text-neutral-900 transition-colors">Hủy</button>
+      <button (click)="saveCategory()" class="px-8 py-3 bg-neutral-900 text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-neutral-800 transition-all duration-300 shadow-md">
+        {{ isEdit ? 'Lưu' : 'Tạo Mới' }}
+      </button>
     </div>
   </div>
 </div>

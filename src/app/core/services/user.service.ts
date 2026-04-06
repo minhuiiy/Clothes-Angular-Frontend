@@ -16,11 +16,11 @@ export class UserService {
   }
 
   updateRole(userId: number, role: string): Observable<IUser> {
-    return this.http.patch<IUser>(`${this.apiUrl}/${userId}/role`, { role });
+    return this.http.put<IUser>(`${this.apiUrl}/${userId}/role?role=${role}`, {});
   }
 
   updateStatus(userId: number, active: boolean): Observable<IUser> {
-    return this.http.patch<IUser>(`${this.apiUrl}/${userId}/status`, { active });
+    return this.http.put<IUser>(`${this.apiUrl}/${userId}/status`, {});
   }
 
   deleteUser(userId: number): Observable<void> {

@@ -44,19 +44,19 @@ export class CategoryService {
   }
 
   create(category: ICategory): Observable<ICategory> {
-    return this.http.post<ICategory>(`${this.apiUrl}/admin`, category).pipe(
+    return this.http.post<ICategory>(this.apiUrl, category).pipe(
       tap(() => this.getAll())
     );
   }
 
   update(id: number, category: ICategory): Observable<ICategory> {
-    return this.http.put<ICategory>(`${this.apiUrl}/admin/${id}`, category).pipe(
+    return this.http.put<ICategory>(`${this.apiUrl}/${id}`, category).pipe(
       tap(() => this.getAll())
     );
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/admin/${id}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.getAll())
     );
   }

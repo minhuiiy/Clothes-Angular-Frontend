@@ -1,0 +1,83 @@
+<div class="px-12 py-10 max-w-7xl mx-auto flex-1 w-full bg-[#fefee5] text-[#363b12]">
+  <!-- Header Section -->
+  <div class="flex justify-between items-end mb-12">
+    <div class="space-y-4 max-w-xl">
+      <p class="text-[10px] font-bold tracking-[0.2em] uppercase text-[#5f5e5e] border-b border-[#5f5e5e]/20 pb-2 inline-block">Staff & Clients</p>
+      <h2 class="text-4xl font-black font-headline tracking-tighter text-[#363b12]">Người Dùng <br/><span class="font-normal italic text-[#5f5e5e]">Hệ Thống</span></h2>
+    </div>
+    <div class="flex gap-4">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#5f5e5e] text-sm">search</span>
+        <input [(ngModel)]="searchKeyword" class="pl-12 pr-6 py-3 bg-transparent border border-[#7f8454]/30 focus:border-[#7f8454] outline-none text-[11px] font-bold w-64 transition-all duration-300 text-[#363b12]" placeholder="TÌM KIẾM NGƯỜI DÙNG.. ." type="text"/>
+      </div>
+      <div class="relative">
+        <select [(ngModel)]="selectedRole" class="pl-6 pr-10 py-3 bg-transparent border border-[#7f8454]/30 focus:border-[#7f8454] outline-none text-[11px] font-bold tracking-widest uppercase appearance-none text-[#363b12] cursor-pointer">
+          <option value="ALL">Tất cả vai trò</option>
+          <option value="ADMIN">Quản trị viên</option>
+          <option value="USER">Khách hàng</option>
+        </select>
+        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#5f5e5e] text-sm pointer-events-none">expand_more</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Table -->
+  <table class="w-full text-left border-collapse">
+    <thead>
+      <tr>
+        <th class="px-6 py-5 uppercase tracking-[0.2em] font-bold text-[9px] text-[#5f5e5e] border-b border-[#7f8454]/20 w-16">ID</th>
+        <th class="px-6 py-5 uppercase tracking-[0.2em] font-bold text-[9px] text-[#5f5e5e] border-b border-[#7f8454]/20">Tài Khoản</th>
+        <th class="px-6 py-5 uppercase tracking-[0.2em] font-bold text-[9px] text-[#5f5e5e] border-b border-[#7f8454]/20 w-40 text-center">Vai Trò</th>
+        <th class="px-6 py-5 uppercase tracking-[0.2em] font-bold text-[9px] text-[#5f5e5e] border-b border-[#7f8454]/20 w-40 text-center">Trạng Thái</th>
+        <th class="px-6 py-5 uppercase tracking-[0.2em] font-bold text-[9px] text-[#5f5e5e] border-b border-[#7f8454]/20 w-32 text-right">Quản Lý</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of getFilteredUsers(); let i = index" class="group hover:bg-[#fafcda] transition-colors duration-500 border-b border-[#7f8454]/10">
+        <td class="px-6 py-6 border-r border-[#7f8454]/5">
+          <span class="text-[11px] font-bold text-[#5f5e5e] font-mono">#{{ user.id }}</span>
+        </td>
+        <td class="px-6 py-6 border-r border-[#7f8454]/5">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-[#e7edb4] flex items-center justify-center font-headline font-bold text-[#363b12] text-sm">
+              {{ user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U' }}
+            </div>
+            <div>
+              <h3 class="text-sm font-bold font-headline text-[#363b12] mb-1">{{ user.fullName }}</h3>
+              <p class="text-[10px] tracking-wider text-[#5f5e5e] font-mono">{{ user.email }}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-6 border-r border-[#7f8454]/5 text-center">
+          <span [ngClass]="user.role === 'ADMIN' ? 'bg-[#363b12] text-[#fefee5]' : 'bg-[#e7edb4] text-[#363b12]'" class="px-3 py-1.5 text-[9px] uppercase tracking-[0.2em] font-bold inline-block min-w-[90px]">
+            {{ user.role === 'ADMIN' ? 'Admin' : 'Khách Hàng' }}
+          </span>
+        </td>
+        <td class="px-6 py-6 border-r border-[#7f8454]/5 text-center">
+          <button (click)="toggleUserStatus(user)" [ngClass]="user.active ? 'text-[#7f8454] border-[#7f8454]' : 'text-[#a54731] border-[#a54731]'" class="px-3 py-1 text-[9px] uppercase tracking-widest font-bold border rounded-none transition-colors w-full">
+            {{ user.active ? 'Hoạt Động' : 'Đã Khóa' }}
+          </button>
+        </td>
+        <td class="px-6 py-6 text-right">
+          <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button (click)="changeRolePrompt(user)" class="w-8 h-8 flex items-center justify-center bg-transparent border border-[#7f8454]/30 text-[#5f5e5e] hover:border-[#363b12] hover:text-[#363b12] transition-colors" title="Đổi vai trò">
+              <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+            </button>
+            <button (click)="confirmDelete(user)" class="w-8 h-8 flex items-center justify-center bg-transparent border border-[#a54731]/30 text-[#a54731] hover:bg-[#a54731] hover:text-white transition-colors" title="Xóa người dùng">
+              <span class="material-symbols-outlined text-[16px]">person_remove</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <!-- Empty State -->
+      <tr *ngIf="getFilteredUsers().length === 0">
+        <td colspan="5" class="py-12 text-center text-[#5f5e5e] text-sm font-medium">Không tìm thấy người dùng nào.</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="flex justify-between items-center mt-10">
+    <p class="text-[9px] uppercase tracking-[0.2em] font-bold text-[#5f5e5e]">Đang hiển thị <span class="text-[#363b12]">{{ getFilteredUsers().length }}</span> / <span class="text-[#363b12]">{{ users.length }}</span></p>
+  </div>
+</div>

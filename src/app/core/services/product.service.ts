@@ -21,6 +21,8 @@ export interface IProduct {
     id: number;
     name: string;
   };
+  categoryId?: number;
+  brandId?: number;
 }
 
 @Injectable({
@@ -64,20 +66,20 @@ export class ProductService {
     });
   }
 
-  createProduct(formData: FormData): Observable<IProduct> {
-    return this.http.post<IProduct>(this.adminUrl, formData).pipe(
+  createProduct(productParam: Partial<IProduct>): Observable<IProduct> {
+    return this.http.post<IProduct>(this.apiUrl, productParam).pipe(
       tap(() => this.getAllProductsAdmin())
     );
   }
 
-  updateProduct(id: number, formData: FormData): Observable<IProduct> {
-    return this.http.put<IProduct>(`${this.adminUrl}/${id}`, formData).pipe(
+  updateProduct(id: number, productParam: Partial<IProduct>): Observable<IProduct> {
+    return this.http.put<IProduct>(`${this.apiUrl}/${id}`, productParam).pipe(
       tap(() => this.getAllProductsAdmin())
     );
   }
 
   deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.adminUrl}/${id}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
       tap(() => this.getAllProductsAdmin())
     );
   }
