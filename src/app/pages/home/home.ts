@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService, IProduct } from '../../core/services/product.service';
@@ -17,7 +17,8 @@ export class Home implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -25,6 +26,7 @@ export class Home implements OnInit {
       next: (data) => {
         if (data && data.products) {
           this.featuredProducts = data.products;
+          this.cdr.detectChanges();
         }
       }
     });
@@ -34,6 +36,7 @@ export class Home implements OnInit {
       // Just take top 3 for the home page cards
       if (data && data.length > 0) {
          this.categories = data.slice(0, 3);
+         this.cdr.detectChanges();
       }
     });
   }
