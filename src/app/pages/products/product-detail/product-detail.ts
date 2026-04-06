@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../../core/services/product.service';
+import { CartService } from '../../../core/services/cart.service';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-product-detail',
@@ -18,7 +20,9 @@ export class ProductDetail implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
-    private productService: ProductService
+    private productService: ProductService,
+    private cartService: CartService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +57,18 @@ export class ProductDetail implements OnInit {
   }
 
   addToCart() {
-    alert(`Đã thêm ${this.quantity} sản phẩm "${this.product.name}" vào giỏ hàng!`);
+    if (!this.authService.getCurrentUser()) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      return;
+    }
+
+    this.cartService.addToCart(this.product.id, this.quantity).subscribe({
+      next: () => {
+        // Success silent or maybe a toast? For now just silent
+      },
+      error: (err) => {
+        console.error('Error adding to cart', err);
+      }
+    });
   }
 }

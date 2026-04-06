@@ -1,133 +1,173 @@
 .auth-wrapper {
+  background-color: #f4f4f4;
+  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 80px);
-  background-color: var(--bg-color);
-  padding: 2rem;
+  padding: 40px 15px;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 550px;
-  background: #ffffff;
-  padding: 3rem 2rem;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 50px 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  text-align: center;
 }
 
-.auth-tabs {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+.auth-header {
+  margin-bottom: 40px;
 }
 
-.auth-tabs h2 {
-  font-size: 1.8rem;
+.auth-title {
+  font-size: 28px;
   font-weight: 700;
-  color: #ccc;
-  margin: 0;
-  cursor: pointer;
-  transition: color 0.3s;
+  color: #000;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
-.auth-tabs h2.active {
-  color: #000;
-}
-
-.auth-tabs .divider {
-  font-size: 1.8rem;
-  font-weight: 300;
-  color: #000;
+.title-underline {
+  width: 60px;
+  height: 4px;
+  background-color: #000;
+  margin: 0 auto;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 15px;
 }
 
-.auth-input {
+.form-input {
   width: 100%;
-  padding: 1.2rem;
-  font-size: 1rem;
-  background-color: #e5e5e5;
-  border: none;
-  font-family: inherit;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 15px;
   color: #333;
+  transition: border-color 0.2s;
 }
 
-.auth-input::placeholder {
-  color: #fff;
-  font-weight: 500;
+.form-input:focus {
+  border-color: #000;
+  outline: none;
 }
 
-/* Fallback for standard browsers since pure white on grey might be hard, but we follow the UI */
-.auth-input::-webkit-input-placeholder { color: #f0f0f0; }
-.auth-input:focus {
-  outline: 2px solid #ccc;
-  background-color: #eeeeee;
-}
-
-.auth-actions {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.btn-dark {
+.btn-submit {
+  width: 100%;
   background-color: #000;
   color: #fff;
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  border-radius: 8px; /* Based on UI snippet */
   border: none;
+  padding: 14px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
   text-transform: uppercase;
+  margin-top: 10px;
+  transition: background 0.3s;
 }
 
-.btn-dark:hover {
+.btn-submit:hover:not(:disabled) {
   background-color: #333;
 }
 
-.btn-dark:disabled {
-  background-color: #888;
+.btn-submit:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.auth-links {
+.form-footer {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-top: 15px;
 }
 
-.auth-links p {
-  margin: 0;
-  font-size: 0.95rem;
+.footer-link {
   color: #333;
-}
-
-.auth-links .link {
-  color: #4b6b9e;
   text-decoration: none;
 }
 
-.auth-links .link:hover {
+.footer-link:hover {
   text-decoration: underline;
 }
 
-.error-msg {
-  color: #d13030;
-  font-size: 0.9rem;
-  margin-top: 1rem;
+.social-login-divider {
+  position: relative;
+  margin: 30px 0;
   text-align: center;
 }
 
-.success-msg {
-  color: #27863d;
-  font-size: 0.9rem;
-  margin-top: 1rem;
-  text-align: center;
+.social-login-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #eee;
+  z-index: 1;
+}
+
+.divider-text {
+  background-color: #fff;
+  padding: 0 15px;
+  color: #666;
+  font-size: 13px;
+  position: relative;
+  z-index: 2;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-social {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-facebook {
+  background-color: #4267B2;
+}
+
+.btn-google {
+  background-color: #DB4437;
+}
+
+.btn-social i {
+  font-size: 16px;
+}
+
+.alert {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.alert.error {
+  background-color: #fdecea;
+  color: #d32f2f;
+}
+
+.alert.success {
+  background-color: #edf7ed;
+  color: #2e7d32;
 }

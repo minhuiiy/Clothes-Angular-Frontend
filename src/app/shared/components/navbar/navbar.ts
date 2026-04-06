@@ -3,6 +3,10 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth';
+import { CartService } from '../../../core/services/cart.service';
+import { ProductService } from '../../../core/services/product.service';
+import { Observable } from 'rxjs';
+import { CategoryService, CategoryMenuResponse, CategorySummary } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,12 +19,31 @@ export class Navbar implements OnInit {
   isSearchActive = false;
   searchKeyword = '';
   currentUser: any = null;
+  cartCount$: Observable<number>;
+  menu: CategoryMenuResponse | null = null;
+  openDropdown: 'nam' | 'nu' | 'phuKien' | null = null;
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(
+    public authService: AuthService, 
+    private router: Router,
+    private cartService: CartService,
+    private categoryService: CategoryService
+  ) {
+    this.cartCount$ = this.cartService.getCartCount();
+  }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
+    });
+
+    this.categoryService.getMenu().subscribe({
+      next: (data) => {
+        this.menu = data;
+      },
+      error: () => {
+        this.menu = { nam: [], nu: [], phuKien: [] };
+      }
     });
   }
 
@@ -38,5 +61,18 @@ export class Navbar implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  toggleDropdown(key: 'nam' | 'nu' | 'phuKien') {
+    this.openDropdown = key;
+  }
+
+  closeDropdown() {
+    this.openDropdown = null;
+  }
+
+  onSelectCategory(category: CategorySummary) {
+    this.closeDropdown();
+    this.router.navigate(['/products'], { queryParams: { categoryId: category.id } });
   }
 }

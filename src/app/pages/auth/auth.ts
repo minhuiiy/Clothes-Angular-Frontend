@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -22,7 +22,11 @@ export class AuthComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     // Nếu URL là /auth/register thì chuyển mode
@@ -40,6 +44,8 @@ export class AuthComponent implements OnInit {
     this.isLoginMode = isLogin;
     this.errorMessage = '';
     this.successMessage = '';
+    const targetUrl = isLogin ? '/auth/login' : '/auth/register';
+    this.router.navigate([targetUrl]);
   }
 
   onSubmit() {
@@ -49,7 +55,8 @@ export class AuthComponent implements OnInit {
     if (this.isLoginMode) {
       this.authService.login({ username: this.formData.username, password: this.formData.password }).subscribe({
         next: (res) => {
-          this.router.navigate(['/']);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigate([returnUrl]);
         },
         error: (err) => {
           this.errorMessage = 'Sai tên đăng nhập hoặc mật khẩu!';
