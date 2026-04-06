@@ -27,17 +27,17 @@ export class ProductList implements OnInit {
   categoryId: number | null = null;
   isFilterOpen = false;
   sort = 'newest';
-  colors: any[] = [
-    { name: 'Đen', value: 'black' },
-    { name: 'Trắng', value: 'white' },
-    { name: 'Xanh', value: 'blue' },
-    { name: 'Đỏ', value: 'red' },
-    { name: 'Vàng', value: 'yellow' }
+  colors = [
+    { name: 'Đen', value: 'BLACK', hex: '#000000' },
+    { name: 'Trắng', value: 'WHITE', hex: '#FFFFFF' },
+    { name: 'Xanh dương', value: 'BLUE', hex: '#0000FF' },
+    { name: 'Đỏ', value: 'RED', hex: '#FF0000' }
   ];
-  priceRanges: any[] = [
-    { label: '0 - 500k', min: 0, max: 500000 },
-    { label: '500k - 1tr', min: 500000, max: 1000000 },
-    { label: 'Trên 1tr', min: 1000000, max: null }
+
+  priceRanges = [
+    { label: 'Dưới 500.000₫', min: 0, max: 500000 },
+    { label: '1.000.000₫ - 2.000.000₫', min: 1000000, max: 2000000 },
+    { label: 'Từ 2.000.000₫', min: 2000000, max: null }
   ];
   filters: any = {
     categoryId: null,
@@ -48,6 +48,7 @@ export class ProductList implements OnInit {
     isPromoted: false,
     isFeatured: false
   };
+
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {}
 

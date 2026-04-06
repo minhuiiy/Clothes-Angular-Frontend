@@ -38,10 +38,12 @@ export class ProductService {
   }
 
   // Public methods
-  getProducts(options: { keyword?: string; page?: number; size?: number; categoryId?: number; sort?: string } = {}): Observable<any> {
+  getProducts(options: { keyword?: string; page?: number; size?: number; sort?: string; categoryId?: number } = {}): Observable<any> {
+    const page = options.page ?? 0;
+    const size = options.size ?? 10;
     let params = new HttpParams()
-      .set('page', (options.page || 0).toString())
-      .set('size', (options.size || 10).toString())
+      .set('page', page.toString())
+      .set('size', size.toString())
       .set('sort', options.sort || 'newest');
 
     if (options.keyword) params = params.set('keyword', options.keyword);
