@@ -25,6 +25,29 @@ export class ProductList implements OnInit {
   totalItems = 0;
   keyword = '';
   categoryId: number | null = null;
+  isFilterOpen = false;
+  sort = 'newest';
+  colors: any[] = [
+    { name: 'Đen', value: 'black' },
+    { name: 'Trắng', value: 'white' },
+    { name: 'Xanh', value: 'blue' },
+    { name: 'Đỏ', value: 'red' },
+    { name: 'Vàng', value: 'yellow' }
+  ];
+  priceRanges: any[] = [
+    { label: '0 - 500k', min: 0, max: 500000 },
+    { label: '500k - 1tr', min: 500000, max: 1000000 },
+    { label: 'Trên 1tr', min: 1000000, max: null }
+  ];
+  filters: any = {
+    categoryId: null,
+    brandId: null,
+    minPrice: null,
+    maxPrice: null,
+    color: null,
+    isPromoted: false,
+    isFeatured: false
+  };
 
   constructor(private productService: ProductService, private route: ActivatedRoute) {}
 

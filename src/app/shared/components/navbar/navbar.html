@@ -76,6 +76,11 @@
 
       <ng-template #loggedInTpl>
         <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
+          <a *ngIf="currentUser && currentUser.roles && currentUser.roles.includes('ROLE_ADMIN')" 
+             routerLink="/admin" 
+             style="font-size: 0.8rem; font-weight: bold; background: #0f172a; color: white; padding: 4px 10px; border-radius: 4px;">
+            Quản trị
+          </a>
           <span style="font-size: 0.9rem; font-weight: bold; margin-left: 5px;">Hi, {{ currentUser.fullName ||
             currentUser.username }}</span>
           <a href="javascript:void(0)" (click)="logout()" title="Đăng xuất"

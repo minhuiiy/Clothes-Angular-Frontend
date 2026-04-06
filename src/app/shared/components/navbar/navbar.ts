@@ -6,7 +6,7 @@ import { AuthService } from '../../../core/services/auth';
 import { CartService } from '../../../core/services/cart.service';
 import { ProductService } from '../../../core/services/product.service';
 import { Observable } from 'rxjs';
-import { CategoryService, CategoryMenuResponse, CategorySummary } from '../../../core/services/category.service';
+import { CategoryService, CategoryMenuResponse, ICategory } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-navbar',
@@ -71,7 +71,7 @@ export class Navbar implements OnInit {
     this.openDropdown = null;
   }
 
-  onSelectCategory(category: CategorySummary) {
+  onSelectCategory(category: ICategory) {
     this.closeDropdown();
     this.router.navigate(['/products'], { queryParams: { categoryId: category.id } });
   }
